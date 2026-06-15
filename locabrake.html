@@ -280,7 +280,6 @@
             align-items: center;
             -webkit-appearance: none;
         }
-        /* 本表示の追加に伴い、テキストの折り返しを防ぐため幅を最適化 */
         .counter-count {
             font-size: 13.5px;
             font-weight: bold;
@@ -362,29 +361,40 @@
         .app-footer {
             background: #f8fafc;
             padding: 10px;
-            font-size: 8.5px;
-            color: #94a3b8;
-            text-align: center;
+            font-size: 9px;
+            color: #64748b;
+            text-align: justify;
             border-top: 1px solid var(--border-color);
-            line-height: 1.35;
+            line-height: 1.45;
         }
         
         .developer-box {
-            display: inline-grid;
-            grid-template-columns: auto auto;
-            column-gap: 6px;
-            row-gap: 2px;
+            display: table;
+            margin: 0 auto 8px auto;
             font-size: 9.5px;
             font-weight: bold;
             color: #475569;
-            margin-bottom: 6px;
-            text-align: left;
+            line-height: 1.5;
         }
-        .dev-label-1 { grid-column: 1; grid-row: 1; }
-        .dev-uni-1   { grid-column: 2; grid-row: 1; text-align: left; }
-        .dev-name-1  { grid-column: 3; grid-row: 1; text-align: left; }
-        .dev-uni-2   { grid-column: 2; grid-row: 2; text-align: left; }
-        .dev-name-2  { grid-column: 3; grid-row: 2; text-align: left; }
+        .developer-row {
+            display: table-row;
+        }
+        .dev-label {
+            display: table-cell;
+            text-align: left;
+            white-space: nowrap;
+        }
+        .dev-uni {
+            display: table-cell;
+            text-align: left;
+            padding-right: 6px;
+            white-space: nowrap;
+        }
+        .dev-name {
+            display: table-cell;
+            text-align: left;
+            white-space: nowrap;
+        }
 
         .copyright-text {
             font-size: 9px;
@@ -574,11 +584,19 @@
         </div>
 
         <div class="developer-box">
-            <div class="dev-label-1">開発：</div>
-            <div class="dev-uni-1">長崎大学大学院歯科麻酔学分野</div><div class="dev-name-1">讃岐拓郎</div>
-            <div class="dev-uni-2">北海道大学大学院歯科麻酔学教室</div><div class="dev-name-2">城戸幹太</div>
+            <div class="developer-row">
+                <div class="dev-label">開発：</div>
+                <div class="dev-uni">長崎大学大学院歯科麻酔学分野</div>
+                <div class="dev-name">讃岐拓郎</div>
+            </div>
+            <div class="developer-row">
+                <div class="dev-label"></div>
+                <div class="dev-uni">北海道大学大学院歯科麻酔学教室</div>
+                <div class="dev-name">城戸幹太</div>
+            </div>
         </div>
-        <div>本アプリの判定は策定時点のガイドラインおよび標準教科書を基準としており、法的責任の判断や予後を保証するものではありません。臨床における最終的な投与判断は、必ず術者が患者の全身状態を総合的に考慮して行ってください。</div>
+        
+        <div>本アプリの判定は、法的責任の判断や予後を保証するものではありません。臨床における最終的な投与判断は、必ず術者が患者さんの全身状態を総合的に考慮して行ってください。</div>
     </div>
 </div>
 
@@ -664,7 +682,6 @@
         updateCalculations();
     }
 
-    // 【修正】数値の横に「本」という単位文字列を美しく動的レンダリングする処理
     function changeCount(drug, val) {
         let newCount = parseFloat((drugCounts[drug] + val).toFixed(2));
         if (newCount >= 0 && newCount <= 30) {
