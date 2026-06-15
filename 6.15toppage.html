@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow"> <title>臨床意思決定支援システム LocaBrake</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2b7bb9;
+            --primary-hover: #1d5f96;
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 30px 16px;
+        }
+
+        /* 枠外の二層構造ヘッドライン */
+        .page-header-group {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .page-sub-caption {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #475569;
+            letter-spacing: 0.1em;
+            margin-bottom: 6px;
+        }
+
+        .page-main-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1e3a8a;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        /* アカデミックヘッダー枠 */
+        .hero-header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #ffffff, #edf2f7);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .system-title {
+            font-size: 22px;
+            font-weight: bold;
+            color: #0f172a;
+            margin: 0 0 18px 0;
+            letter-spacing: 0.05em;
+        }
+
+        /* 起動ボタン */
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bold;
+            padding: 14px 28px;
+            border-radius: 10px;
+            box-shadow: 0 8px 12px -3px rgba(43, 123, 185, 0.3);
+            transition: all 0.2s ease;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        .cta-button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        /* 解説・仕様カード */
+        .info-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            padding: 22px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .card-heading {
+            font-size: 14px;
+            font-weight: bold;
+            color: #0f172a;
+            margin-top: 0;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 6px;
+        }
+
+        .card-heading i {
+            color: var(--primary-color);
+        }
+
+        p {
+            font-size: 13px;
+            margin: 0 0 12px 0;
+            color: #334155;
+            text-align: justify;
+        }
+        p:last-child { margin-bottom: 0; }
+
+        .list-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 12.5px;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+        .list-item:last-child { margin-bottom: 0; }
+
+        .list-item i {
+            color: #2ecc71;
+            margin-top: 4px;
+            font-size: 11px;
+        }
+
+        /* ダウンロードボックス */
+        .download-box {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 12px;
+        }
+
+        .download-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .file-title {
+            font-size: 13.5px;
+            font-weight: bold;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .download-btn {
+            background: white;
+            border: 1px solid #cbd5e1;
+            color: #334155;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .download-btn:hover {
+            background: #f1f5f9;
+        }
+
+        /* フッター */
+        .app-footer {
+            text-align: center;
+            padding: 20px 10px;
+            font-size: 11px;
+            color: #64748b;
+            border-top: 1px solid var(--border-color);
+            margin-top: 35px;
+        }
+
+        .academic-credits {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            font-size: 11.5px;
+            font-weight: bold;
+            color: #475569;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="page-header-group">
+        <span class="page-sub-caption">臨床意思決定支援システム</span>
+        <h1 class="page-main-title">歯科局所麻酔製剤安全シミュレーター</h1>
+    </div>
+
+    <div class="hero-header">
+        <div class="system-title">LocaBrake（ロカブレーキ）</div>
+        
+        <a href="locabrake.html" class="cta-button">
+            <i class="fa-solid fa-play"></i> シミュレーターを起動する
+        </a>
+    </div>
+
+    <div class="info-card">
+        <h2 class="card-heading"><i class="fa-solid fa-circle-info"></i> 本シミュレーターについて</h2>
+        <p>
+            本シミュレーターは、歯科臨床のチェアーサイドにおいて、直感的に局所麻酔薬および血管収縮薬の最大推奨量を一元管理・可視化するための臨床意思決定支援システムです。
+        </p>
+        <p>
+            米国で先行開発されたモデル「MaxSafe（J Dent Anesth Pain Med 2026;26(3):265-275）」の独創的な分数毒性加算ルールの枠組みを基礎としながら、わが国で使用できる歯科用局所麻酔製剤にローカライズしました。
+        </p>
+    </div>
+
+    <div class="info-card">
+        <h2 class="card-heading"><i class="fa-solid fa-gears"></i> 実装アルゴリズムと安全機能</h2>
+        
+        <div class="list-item">
+            <i class="fa-solid fa-check"></i>
+            <div><strong>分数毒性加算ルール：</strong> 一患者の一処置における複数製剤の混用・追加投与に起因する累積成分毒性をリアルタイムに算出（0.25本単位対応）。</div>
+        </div>
+        <div class="list-item">
+            <i class="fa-solid fa-check"></i>
+            <div><strong>危険側最優先選択ルール（日本独自設計）：</strong> 作用機序の異なるアドレナリンとフェリプレシンの個別負荷率を独立計算し、常にリスクの高い方のパーセンテージを出力する本邦初の評価エンジンを統合。</div>
+        </div>
+        <div class="list-item">
+            <i class="fa-solid fa-check"></i>
+            <div><strong>動的注意警告：</strong> 虚血性心疾患患者におけるカテコラミン回避指示や、妊婦におけるフェリプレシンの子宮収縮に関する注意リマインダーを完全自動出力。</div>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <h2 class="card-heading"><i class="fa-solid fa-file-arrow-down"></i> 添付ドキュメント・関連資料</h2>
+        <p>本システムの内部パラメータ設定や仕様を網羅した公式説明書です。</p>
+        
+        <div class="download-box">
+            <div class="download-info">
+                <h3 class="file-title">LocaBrake 仕様説明書</h3>
+            </div>
+            <a href="LocaBrake_Specification_v1.76_Final.docx" class="download-btn" download>
+                <i class="fa-solid fa-download"></i> DL
+            </a>
+        </div>
+    </div>
+
+    <div class="app-footer">
+        <div class="academic-credits">
+            <div>長崎大学大学院医歯薬学総合研究科 歯科麻酔学分野（讃岐 拓郎）</div>
+            <div>北海道大学大学院歯学研究院 歯科麻酔学教室（城戸 幹太）</div>
+        </div>
+        <p style="font-size: 10.5px; color: #64748b; text-align: center;">
+            &copy; 2026 Takuro Sanuki, Kanta Kido. All Rights Reserved. <br>
+            本プラットフォームは歯科医療の安全性向上のために無償公開されているオープンソースシステムです。
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>

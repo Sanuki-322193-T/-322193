@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>歯科局所麻酔製剤安全シミュレーター LocaBrake Ver 1.76</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2b7bb9;
+            --bg-color: #f1f5f9;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --safe-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0;
+            padding: 10px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: var(--text-color);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .phone-container {
+            width: 100%;
+            max-width: 412px;
+            background: var(--card-bg);
+            border-radius: 25px;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.12);
+            overflow: hidden;
+            border: 8px solid #222222;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .app-header {
+            background: linear-gradient(135deg, #ffffff, #edf2f7);
+            padding: 14px 12px;
+            text-align: center;
+            border-bottom: 1px solid var(--border-color);
+            position: relative;
+        }
+        .title-wrapper {
+            display: flex;
+            align-items: baseline;
+            justify-content: center;
+            gap: 6px;
+        }
+        .app-title {
+            font-size: 14.5px;
+            font-weight: bold;
+            color: #1e3a8a;
+            margin: 0;
+            line-height: 1.3;
+        }
+        .app-version {
+            font-size: 9.5px;
+            font-weight: bold;
+            color: #2b7bb9;
+            background: #e0f2fe;
+            padding: 1px 4px;
+            border-radius: 4px;
+            border: 1px solid #bae6fd;
+        }
+
+        .app-content {
+            padding: 10px 12px;
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .section-title {
+            font-size: 10.5px;
+            font-weight: bold;
+            color: #64748b;
+            text-transform: uppercase;
+            margin: 10px 0 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .section-title:first-of-type { margin-top: 0; }
+
+        .input-card {
+            background: #f8fafc;
+            border-radius: 10px;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+        }
+
+        .main-tab-container {
+            display: flex;
+            background: #e2e8f0;
+            border-radius: 8px;
+            padding: 3px;
+            margin-bottom: 8px;
+        }
+        .main-tab-btn {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 8px;
+            font-size: 12.5px;
+            font-weight: bold;
+            color: #475569;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: all 0.2s;
+            -webkit-appearance: none;
+        }
+        .main-tab-btn.active {
+            background: #475569;
+            color: white;
+        }
+
+        .risk-list-vertical {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            margin-top: 6px;
+            margin-bottom: 8px;
+            padding: 4px;
+            background: #f1f5f9;
+            border-radius: 8px;
+            border: 1px dashed #cbd5e1;
+        }
+        .risk-btn {
+            border: 1px solid var(--border-color);
+            background: white;
+            padding: 8px 12px;
+            font-size: 11px;
+            font-weight: bold;
+            color: #475569;
+            cursor: pointer;
+            border-radius: 6px;
+            text-align: left;
+            transition: all 0.2s;
+            -webkit-appearance: none;
+            line-height: 1.2;
+        }
+        .risk-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .input-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+        .input-row label {
+            font-size: 11.5px;
+            font-weight: bold;
+            color: #334155;
+        }
+        .select-input {
+            width: 110px;
+            padding: 4px;
+            border-radius: 5px;
+            border: 1px solid #cbd5e1;
+            font-size: 11.5px;
+            background: white;
+        }
+
+        .weight-slider-block {
+            margin-top: 6px;
+        }
+        .weight-display-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 4px;
+        }
+        .weight-display-label {
+            font-size: 11.5px;
+            font-weight: bold;
+            color: #334155;
+        }
+        .weight-value-badge {
+            background: #e0f2fe;
+            color: #0369a1;
+            font-size: 14.5px;
+            font-weight: bold;
+            padding: 2px 10px;
+            border-radius: 12px;
+            border: 1px solid #bae6fd;
+        }
+        .weight-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #cbd5e1;
+            outline: none;
+            -webkit-appearance: none;
+            appearance: none;
+            cursor: pointer;
+        }
+        .weight-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: var(--primary-color);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            cursor: pointer;
+        }
+
+        .drug-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .drug-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            transition: opacity 0.3s;
+        }
+        .drug-card.disabled {
+            background: #f1f5f9;
+            opacity: 0.35;
+            pointer-events: none;
+        }
+        .drug-info {
+            flex: 1;
+            padding-right: 8px;
+        }
+        .drug-name {
+            font-size: 12px;
+            font-weight: bold;
+            color: #1e293b;
+            line-height: 1.25;
+        }
+        .drug-brand {
+            font-size: 10.5px;
+            font-weight: bold;
+            color: #2b7bb9;
+            margin-top: 1px;
+        }
+        .drug-spec {
+            font-size: 10px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+        
+        .counter-group {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .counter-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            font-size: 16px;
+            font-weight: bold;
+            color: #334155;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-appearance: none;
+        }
+        /* 本表示の追加に伴い、テキストの折り返しを防ぐため幅を最適化 */
+        .counter-count {
+            font-size: 13.5px;
+            font-weight: bold;
+            min-width: 52px;
+            text-align: center;
+            color: #0f172a;
+        }
+
+        .meter-container {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 12px;
+            border: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .meter-block {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+        .meter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11px;
+            font-weight: bold;
+            color: #475569;
+        }
+        .meter-title {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .meter-bar-wrapper {
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+            position: relative;
+        }
+        .meter-bar-fill {
+            height: 100%;
+            width: 0%;
+            background-color: var(--safe-color);
+            border-radius: 6px;
+            transition: width 0.2s ease, background-color 0.2s;
+        }
+
+        .child-warning-box {
+            background-color: #fef2f2;
+            border: 1px solid #fca5a5;
+            color: #991b1b;
+            border-radius: 8px;
+            padding: 10px;
+            font-size: 11px;
+            line-height: 1.5;
+            margin-top: 4px;
+        }
+        .child-warning-box strong {
+            color: #991b1b;
+        }
+
+        .alert-banner {
+            border-radius: 10px;
+            padding: 10px;
+            font-size: 11px;
+            line-height: 1.45;
+            margin-top: 12px;
+            display: flex;
+            gap: 6px;
+            align-items: flex-start;
+        }
+        .alert-banner.safe { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
+        .alert-banner.warning { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
+        .alert-banner.danger { background: #fef2f2; border: 1px solid #fca5a5; color: #991b1b; }
+
+        .app-footer {
+            background: #f8fafc;
+            padding: 10px;
+            font-size: 8.5px;
+            color: #94a3b8;
+            text-align: center;
+            border-top: 1px solid var(--border-color);
+            line-height: 1.35;
+        }
+        
+        .developer-box {
+            display: inline-grid;
+            grid-template-columns: auto auto;
+            column-gap: 6px;
+            row-gap: 2px;
+            font-size: 9.5px;
+            font-weight: bold;
+            color: #475569;
+            margin-bottom: 6px;
+            text-align: left;
+        }
+        .dev-label-1 { grid-column: 1; grid-row: 1; }
+        .dev-uni-1   { grid-column: 2; grid-row: 1; text-align: left; }
+        .dev-name-1  { grid-column: 3; grid-row: 1; text-align: left; }
+        .dev-uni-2   { grid-column: 2; grid-row: 2; text-align: left; }
+        .dev-name-2  { grid-column: 3; grid-row: 2; text-align: left; }
+
+        .copyright-text {
+            font-size: 9px;
+            color: #64748b;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-align: center;
+            line-height: 1.4;
+        }
+    </style>
+</head>
+<body>
+
+<div class="phone-container">
+    <div class="app-header">
+        <div class="title-wrapper">
+            <h1 class="app-title">歯科局所麻酔製剤安全シミュレーター LocaBrake</h1>
+            <span class="app-version">Ver 1.76</span>
+        </div>
+    </div>
+
+    <div class="app-content">
+        
+        <div class="section-title"><i class="fa-solid fa-user-gear"></i> 患者属性・全身状態設定</div>
+        <div class="input-card">
+            <div class="main-tab-container">
+                <button type="button" class="main-tab-btn active" id="tab-adult" onclick="setMainCategory('adult')">成人モード</button>
+                <button type="button" class="main-tab-btn" id="tab-child" onclick="setMainCategory('child')">小児モード</button>
+            </div>
+
+            <div id="adult-risk-section">
+                <div class="risk-list-vertical">
+                    <button type="button" class="risk-btn active" id="btn-risk1" onclick="setAdultRisk('normal')">既往歴なし</button>
+                    <button type="button" class="risk-btn" id="btn-risk2" onclick="setAdultRisk('mild')">軽〜中等度高血圧・心不全</button>
+                    <button type="button" class="risk-btn" id="btn-risk3" onclick="setAdultRisk('severe')">高度高血圧・心不全およびβ遮断薬服用</button>
+                    <button type="button" class="risk-btn" id="btn-risk4" onclick="setAdultRisk('cardiac')">狭心症・心筋梗塞</button>
+                    <button type="button" class="risk-btn" id="btn-risk5" onclick="setAdultRisk('pregnant')">妊婦</button>
+                </div>
+            </div>
+
+            <div class="input-row" id="age-row" style="display: none; margin-top: 4px; margin-bottom: 8px;">
+                <label for="age-select">年齢区分</label>
+                <select id="age-select" class="select-input" onchange="updateAgeSpecificWeightRange()">
+                    <option value="1">1〜3歳 (4歳未満)</option>
+                    <option value="4" selected>4歳以上</option>
+                </select>
+            </div>
+
+            <div class="weight-slider-block">
+                <div class="weight-display-wrapper">
+                    <div class="weight-display-label">患者の体重</div>
+                    <div class="weight-value-badge"><span id="weight-txt">50</span> kg</div>
+                </div>
+                <input type="range" id="weight-slider" class="weight-slider" min="25" max="120" value="50" step="1" oninput="onSliderChange(this.value)" onchange="onSliderChange(this.value)">
+            </div>
+        </div>
+
+        <div class="section-title"><i class="fa-solid fa-syringe"></i> 局所麻酔製剤投与量（本数入力）</div>
+        <div class="drug-list">
+            
+            <div class="drug-card" id="card-lido">
+                <div class="drug-info">
+                    <div class="drug-name">リドカイン塩酸塩・アドレナリン注射剤 (1.8mL)</div>
+                    <div class="drug-brand">（代表例：キシロカイン）</div>
+                    <div class="drug-spec">2%製剤 / アドレナリン 1:80,000 配合</div>
+                </div>
+                <div class="counter-group">
+                    <button type="button" class="counter-btn" onclick="changeCount('lido', -0.25)">-</button>
+                    <div class="counter-count" id="count-lido">0本</div>
+                    <button type="button" class="counter-btn" onclick="changeCount('lido', 0.25)">+</button>
+                </div>
+            </div>
+
+            <div class="drug-card" id="card-lido-tartrate18">
+                <div class="drug-info">
+                    <div class="drug-name">リドカイン塩酸塩・アドレナリン酒石酸水素塩注射剤 (1.8mL)</div>
+                    <div class="drug-brand">（代表例：オーラ注 1.8mL）</div>
+                    <div class="drug-spec">2%製剤 / アドレナリン 1:73,000 換算配合</div>
+                </div>
+                <div class="counter-group">
+                    <button type="button" class="counter-btn" onclick="changeCount('lido_t18', -0.25)">-</button>
+                    <div class="counter-count" id="count-lido_t18">0本</div>
+                    <button type="button" class="counter-btn" onclick="changeCount('lido_t18', 0.25)">+</button>
+                </div>
+            </div>
+
+            <div class="drug-card" id="card-lido-tartrate10">
+                <div class="drug-info">
+                    <div class="drug-name">リドカイン塩酸塩・アドレナリン酒石酸水素塩注射剤 (1.0mL)</div>
+                    <div class="drug-brand">（代表例：オーラ注 1.0mL）</div>
+                    <div class="drug-spec">2%製剤 / アドレナリン 1:73,000 換算配合</div>
+                </div>
+                <div class="counter-group">
+                    <button type="button" class="counter-btn" onclick="changeCount('lido_t10', -0.25)">-</button>
+                    <div class="counter-count" id="count-lido_t10">0本</div>
+                    <button type="button" class="counter-btn" onclick="changeCount('lido_t10', 0.25)">+</button>
+                </div>
+            </div>
+
+            <div class="drug-card" id="card-artic">
+                <div class="drug-info">
+                    <div class="drug-name">アルチカイン塩酸塩・アドレナリン酒石酸水素塩注射剤</div>
+                    <div class="drug-brand">（代表例：セプトカイン）</div>
+                    <div class="drug-spec" id="artic-spec">4%製剤 (1.7mL) / アドレナリン 1:100,000 配合</div>
+                </div>
+                <div class="counter-group">
+                    <button type="button" class="counter-btn" onclick="changeCount('artic', -0.25)">-</button>
+                    <div class="counter-count" id="count-artic">0本</div>
+                    <button type="button" class="counter-btn" onclick="changeCount('artic', 0.25)">+</button>
+                </div>
+            </div>
+
+            <div class="drug-card" id="card-prilo">
+                <div class="drug-info">
+                    <div class="drug-name">プロピトカイン塩酸塩・フェリプレシン注射剤</div>
+                    <div class="drug-brand">（代表例：シタネスト-オクタプレシン）</div>
+                    <div class="drug-spec" id="prilo-spec">3%製剤 (1.8mL) / フェリプレシン 0.03U/mL 配合</div>
+                </div>
+                <div class="counter-group">
+                    <button type="button" class="counter-btn" onclick="changeCount('prilo', -0.25)">-</button>
+                    <div class="counter-count" id="count-prilo">0本</div>
+                    <button type="button" class="counter-btn" onclick="changeCount('prilo', 0.25)">+</button>
+                </div>
+            </div>
+
+            <div class="drug-card" id="card-mepi">
+                <div class="drug-info">
+                    <div class="drug-name">メピバカイン塩酸塩注射剤</div>
+                    <div class="drug-brand">（代表例：スキャンドネスト）</div>
+                    <div class="drug-spec">3%製剤 (1.8mL) / 血管収縮薬なし</div>
+                </div>
+                <div class="counter-group">
+                    <button type="button" class="counter-btn" onclick="changeCount('mepi', -0.25)">-</button>
+                    <div class="counter-count" id="count-mepi">0本</div>
+                    <button type="button" class="counter-btn" onclick="changeCount('mepi', 0.25)">+</button>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="section-title"><i class="fa-solid fa-chart-bar"></i> リアルタイム安全性モニター</div>
+        <div class="meter-container">
+            
+            <div class="meter-block">
+                <div class="meter-header">
+                    <div class="meter-title">
+                        <i class="fa-solid fa-triangle-exclamation" style="color: #64748b; font-size: 10px;"></i>
+                        <span>局所麻酔薬 累積全身毒性</span>
+                    </div>
+                    <span id="txt-tox-percent">0.0%</span>
+                </div>
+                <div class="weight-slider-block" style="margin-top: 0;">
+                    <div class="meter-bar-wrapper">
+                        <div class="meter-bar-fill" id="bar-tox"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="meter-block" id="vaso-meter-block">
+                <div class="meter-header" id="vaso-header">
+                    <div class="meter-title">
+                        <i class="fa-solid fa-heart-pulse" style="color: #64748b; font-size: 10px;"></i>
+                        <span>血管収縮薬 心血管負荷度</span>
+                    </div>
+                    <span id="txt-adrenaline-percent">0.0%</span>
+                </div>
+                <div class="meter-bar-wrapper" id="vaso-bar-wrapper">
+                    <div class="meter-bar-fill" id="bar-vasoconstrictor"></div>
+                </div>
+                <div class="child-warning-box" id="child-warning-panel" style="display: none;">
+                    <strong>【注意】</strong>小児における血管収縮薬の体重ベースの安全上限（極量）は国内外で確立されていません。そのため、投与中および投与直後は、患者の全身状態、特に血圧や心拍数を確認しながら、必要最小限の投与にとどめてください。
+                </div>
+            </div>
+
+        </div>
+
+        <div class="alert-banner safe" id="msg-banner">
+            <i class="fa-solid fa-circle-check" style="font-size: 15px; margin-top: 1px;" id="msg-icon"></i>
+            <span id="msg-text">安全域内です。投与後は一定時間の経過観察を行ってください。</span>
+        </div>
+
+    </div>
+
+    <div class="app-footer">
+        <div class="copyright-text">
+            &copy; 2026 Takuro Sanuki, Kanta Kido. 本プログラムは歯科医療の安全性向上のために無償公開されているオープンソースソフトウェアです。営利目的の無断転載・販売を禁じます。
+        </div>
+
+        <div class="developer-box">
+            <div class="dev-label-1">開発：</div>
+            <div class="dev-uni-1">長崎大学大学院歯科麻酔学分野</div><div class="dev-name-1">讃岐拓郎</div>
+            <div class="dev-uni-2">北海道大学大学院歯科麻酔学教室</div><div class="dev-name-2">城戸幹太</div>
+        </div>
+        <div>本アプリの判定は策定時点のガイドラインおよび標準教科書を基準としており、法的責任の判断や予後を保証するものではありません。臨床における最終的な投与判断は、必ず術者が患者の全身状態を総合的に考慮して行ってください。</div>
+    </div>
+</div>
+
+<script>
+    // 状態管理
+    let mainCategory = 'adult'; 
+    let adultRiskMode = 'normal'; 
+    let drugCounts = { lido: 0, lido_t18: 0, lido_t10: 0, artic: 0, prilo: 0, mepi: 0 };
+
+    const DRUG_SPECS = {
+        lido:      { mg_per_cart: 36, adrenaline: 0.0225, feli: 0,     mrd_adult_mg: 500, mrd_adult_mg_kg: 7, mrd_child_mg_kg: 4.4 },
+        lido_t18:  { mg_per_cart: 36, adrenaline: 0.0246, feli: 0,     mrd_adult_mg: 500, mrd_adult_mg_kg: 7, mrd_child_mg_kg: 4.4 }, 
+        lido_t10:  { mg_per_cart: 20, adrenaline: 0.0137, feli: 0,     mrd_adult_mg: 500, mrd_adult_mg_kg: 7, mrd_child_mg_kg: 4.4 }, 
+        artic:     { mg_per_cart: 68, adrenaline: 0.017,  feli: 0,     mrd_adult_mg: null,mrd_adult_mg_kg: 7, mrd_child_mg_kg: 7 },
+        prilo:     { mg_per_cart: 54, adrenaline: 0,      feli: 0.054, mrd_adult_mg: 400, mrd_adult_mg_kg: null,mrd_child_mg_kg: 6 },
+        mepi:      { mg_per_cart: 54, adrenaline: 0,      feli: 0,     mrd_adult_mg: 500, mrd_adult_mg_kg: 6, mrd_child_mg_kg: 4.4 }
+    };
+
+    function onSliderChange(val) {
+        document.getElementById('weight-txt').innerText = val;
+        updateCalculations();
+    }
+
+    function updateAgeSpecificWeightRange() {
+        const childAge = parseInt(document.getElementById('age-select').value);
+        const slider = document.getElementById('weight-slider');
+
+        if (childAge === 1) { 
+            slider.min = "5"; slider.max = "30"; slider.value = "10";
+            document.getElementById('weight-txt').innerText = "10";
+        } else { 
+            slider.min = "5"; slider.max = "50"; slider.value = "15";
+            document.getElementById('weight-txt').innerText = "15";
+        }
+        updateCalculations();
+    }
+
+    function setMainCategory(cat) {
+        mainCategory = cat;
+        document.getElementById('tab-adult').classList.toggle('active', cat === 'adult');
+        document.getElementById('tab-child').classList.toggle('active', cat === 'child');
+        
+        document.getElementById('adult-risk-section').style.display = cat === 'adult' ? 'block' : 'none';
+        document.getElementById('age-row').style.display = cat === 'child' ? 'flex' : 'none';
+        
+        const txtVasoPercent = document.getElementById('txt-adrenaline-percent');
+        const vasoBarWrapper = document.getElementById('vaso-bar-wrapper');
+        const childWarningPanel = document.getElementById('child-warning-panel');
+
+        if (cat === 'child') {
+            txtVasoPercent.style.display = 'none';
+            vasoBarWrapper.style.display = 'none';
+            childWarningPanel.style.display = 'block';
+        } else {
+            txtVasoPercent.style.display = 'inline';
+            vasoBarWrapper.style.display = 'block';
+            childWarningPanel.style.display = 'none';
+        }
+        
+        resetCounts();
+        
+        const slider = document.getElementById('weight-slider');
+        if (cat === 'child') {
+            document.getElementById('age-select').value = "4"; 
+            slider.min = "5"; slider.max = "50"; slider.value = "15"; 
+            document.getElementById('weight-txt').innerText = "15";
+        } else {
+            slider.min = "25"; slider.max = "120"; slider.value = "50";
+            document.getElementById('weight-txt').innerText = "50";
+        }
+        updateCalculations();
+    }
+
+    function setAdultRisk(risk) {
+        adultRiskMode = risk;
+        document.getElementById('btn-risk1').classList.toggle('active', risk === 'normal');
+        document.getElementById('btn-risk2').classList.toggle('active', risk === 'mild');
+        document.getElementById('btn-risk3').classList.toggle('active', risk === 'severe');
+        document.getElementById('btn-risk4').classList.toggle('active', risk === 'cardiac');
+        document.getElementById('btn-risk5').classList.toggle('active', risk === 'pregnant');
+        
+        resetCounts();
+        updateCalculations();
+    }
+
+    // 【修正】数値の横に「本」という単位文字列を美しく動的レンダリングする処理
+    function changeCount(drug, val) {
+        let newCount = parseFloat((drugCounts[drug] + val).toFixed(2));
+        if (newCount >= 0 && newCount <= 30) {
+            drugCounts[drug] = newCount;
+            let displayNum = Number(newCount.toString());
+            document.getElementById(`count-${drug}`).innerText = displayNum + "本";
+            updateCalculations();
+        }
+    }
+
+    function resetCounts() {
+        for (let drug in drugCounts) {
+            drugCounts[drug] = 0;
+            document.getElementById(`count-${drug}`).innerText = "0本";
+        }
+    }
+
+    function updateCalculations() {
+        let weight = parseFloat(document.getElementById('weight-slider').value) || 20;
+        let childAge = parseInt(document.getElementById('age-select').value);
+
+        let isArticBlocked = (mainCategory === 'child' && childAge === 1);
+        const articCard = document.getElementById('card-artic');
+        if (isArticBlocked) {
+            drugCounts.artic = 0; document.getElementById('count-artic').innerText = "0本";
+            articCard.classList.add('disabled');
+            document.getElementById('artic-spec').innerText = "【注意】4歳未満の小児への安全性は確立していません";
+        } else {
+            articCard.classList.remove('disabled');
+            document.getElementById('artic-spec').innerText = "4%製剤 (1.7mL) / アドレナリン 1:100,000 配合";
+        }
+
+        if (mainCategory === 'adult' && adultRiskMode === 'pregnant') {
+            document.getElementById('prilo-spec').innerText = "3%製剤 (1.8mL) / 【注意】有益性投与の判断必要";
+        } else {
+            document.getElementById('prilo-spec').innerText = "3%製剤 (1.8mL) / フェリプレシン 0.03U/mL 配合";
+        }
+
+        let totalFractionalToxicity = 0;
+        for (let drug in drugCounts) {
+            let count = drugCounts[drug]; if (count === 0) continue;
+            let mgAdministered = count * DRUG_SPECS[drug].mg_per_cart;
+            let mrd = 0;
+            let spec = DRUG_SPECS[drug];
+            let adultCap = Math.min(spec.mrd_adult_mg_kg ? (weight * spec.mrd_adult_mg_kg) : Infinity, spec.mrd_adult_mg ? spec.mrd_adult_mg : Infinity);
+
+            if (mainCategory !== 'child') {
+                mrd = adultCap;
+            } else {
+                mrd = Math.min(weight * DRUG_SPECS[drug].mrd_child_mg_kg, adultCap);
+            }
+            if (mrd > 0) totalFractionalToxicity += (mgAdministered / mrd);
+        }
+        let toxPercent = totalFractionalToxicity * 100;
+
+        let totalAdrenalineAdministered = (drugCounts.lido * DRUG_SPECS.lido.adrenaline) + 
+                                          (drugCounts.lido_t18 * DRUG_SPECS.lido_t18.adrenaline) + 
+                                          (drugCounts.lido_t10 * DRUG_SPECS.lido_t10.adrenaline) + 
+                                          (drugCounts.artic * DRUG_SPECS.artic.adrenaline);
+        let totalFeliAdministered = drugCounts.prilo * DRUG_SPECS.prilo.feli;
+
+        let adrenalineLimit = 0.30; 
+        let feliLimit = 0.40;       
+
+        if (mainCategory === 'adult') {
+            if (adultRiskMode === 'mild') {
+                adrenalineLimit = 0.045; feliLimit = 0.18; 
+            } else if (adultRiskMode === 'severe') {
+                adrenalineLimit = 0.0225; feliLimit = 0.18; 
+            } else if (adultRiskMode === 'cardiac') {
+                adrenalineLimit = 0.0001; feliLimit = 0.108; 
+            } else if (adultRiskMode === 'pregnant') {
+                adrenalineLimit = 0.045; feliLimit = 0.40; 
+            }
+        }
+
+        let adrenalineLoadPercent = (totalAdrenalineAdministered / adrenalineLimit) * 100;
+        let feliLoadPercent = (totalFeliAdministered / feliLimit) * 100;
+        let maxVasoLoadPercent = Math.max(adrenalineLoadPercent, feliLoadPercent);
+
+        updateMeterDOM('bar-tox', 'txt-tox-percent', toxPercent, 80, 100);
+        
+        if (mainCategory === 'adult' && adultRiskMode === 'normal') {
+            let adrenalineMg = totalAdrenalineAdministered;
+            let currentVasoPercent = 0; let barColorClass = 'var(--safe-color)';
+            
+            if (totalFeliAdministered > 0 && feliLoadPercent > (adrenalineMg / 0.30 * 100)) {
+                currentVasoPercent = feliLoadPercent;
+                if (currentVasoPercent <= 80) barColorClass = 'var(--safe-color)';
+                else if (currentVasoPercent <= 100) barColorClass = 'var(--warning-color)';
+                else barColorClass = 'var(--danger-color)';
+            } else {
+                currentVasoPercent = (adrenalineMg / 0.30) * 100;
+                if (adrenalineMg <= 0.20) barColorClass = 'var(--safe-color)'; 
+                else if (adrenalineMg <= 0.30) barColorClass = 'var(--warning-color)'; 
+                else barColorClass = 'var(--danger-color)'; 
+            }
+            const bar = document.getElementById('bar-vasoconstrictor');
+            const text = document.getElementById('txt-adrenaline-percent');
+            let displayPercent = Math.min(currentVasoPercent, 200).toFixed(1) + "%";
+            text.innerText = currentVasoPercent > 100 ? displayPercent + " (極量超過)" : displayPercent;
+            bar.style.width = Math.min(currentVasoPercent, 100) + "%"; bar.style.backgroundColor = barColorClass;
+            
+        } else if (mainCategory !== 'child') {
+            updateMeterDOM('bar-vasoconstrictor', 'txt-adrenaline-percent', maxVasoLoadPercent, 80, 100);
+        }
+
+        updateBannerDOM(toxPercent, maxVasoLoadPercent, isArticBlocked, totalAdrenalineAdministered, totalFeliAdministered);
+    }
+
+    function updateMeterDOM(barId, textId, percent, warnThresh, dangerThresh) {
+        const bar = document.getElementById(barId);
+        const text = document.getElementById(textId);
+        let displayPercent = Math.min(percent, 200).toFixed(1) + "%";
+        text.innerText = percent > dangerThresh ? displayPercent + " (上限超過)" : displayPercent;
+        bar.style.width = Math.min(percent, 100) + "%";
+        if (percent <= warnThresh) bar.style.backgroundColor = 'var(--safe-color)';
+        else if (percent <= dangerThresh) bar.style.backgroundColor = 'var(--warning-color)';
+        else bar.style.backgroundColor = 'var(--danger-color)';
+    }
+
+    function updateBannerDOM(toxPercent, vasoPercent, isArticBlocked, totalAdrenaline, totalFeli) {
+        const banner = document.getElementById('msg-banner');
+        const icon = document.getElementById('msg-icon');
+        const text = document.getElementById('msg-text');
+
+        let bannerClass = "safe"; let iconClass = "fa-circle-check";
+        let msg = "安全域内です。投与中・投与直後はバイタルサイン等の観察（モニタリング）を行ってください。";
+
+        if (isArticBlocked) {
+            bannerClass = "danger"; iconClass = "fa-triangle-exclamation";
+            msg = "【注意】アルチカイン製剤は海外においても4歳未満の小児を対象とした臨床試験は実施されていません。";
+        } else if (mainCategory === 'adult' && adultRiskMode === 'cardiac' && totalAdrenaline > 0) {
+            bannerClass = "danger"; iconClass = "fa-circle-xmark";
+            msg = "【注意】虚血性心疾患（狭心症・心筋梗塞）患者へのアドレナリン投与は心筋虚血増悪のリスクがあります。アドレナリン製剤の使用を中止し、フェリプレシン製剤（上限2本まで）への変更を厳重に検討してください。";
+        } else if (mainCategory === 'adult' && adultRiskMode === 'pregnant' && totalFeli > 0) {
+            bannerClass = "danger"; iconClass = "fa-triangle-exclamation";
+            msg = "【注意】妊婦又は妊娠している可能性のある婦人には、治療上の有益性が危険性を上回ると判断される場合にのみ投与すること。本剤の血管収縮剤（フェリプレシン）は子宮収縮作用を有しています。";
+        } else if (toxPercent > 100 || (mainCategory !== 'child' && vasoPercent > 100)) {
+            bannerClass = "danger"; iconClass = "fa-circle-exclamation";
+            if (toxPercent > 100 && vasoPercent > 100) {
+                msg = "【重篤】局所麻酔薬の累積全身毒性、および血管収縮薬の上限を同時に超過しています！局所麻酔薬中毒(LAST)および急性心血管アクシデントの危険があります。";
+            } else if (toxPercent > 100) {
+                msg = "【注意】局所麻酔薬の基準最高用量超えを検知。中枢神経症状（多弁、めまい、痙攣）などの局所麻酔薬中毒の初期サインに厳重に注意してください。";
+            } else {
+                msg = "【注意】血管収縮薬の極量超過を検知。選択されたリスク状態における上限を超えています。速やかに投与を中止し、血圧・心拍の急変動を監視してください。";
+            }
+        } else if (mainCategory === 'adult' && adultRiskMode === 'normal' && totalAdrenaline > 0.20) {
+            bannerClass = "warning"; iconClass = "fa-triangle-exclamation";
+            msg = "【注意】アドレナリンの推奨上限（200 µg）を超過しました。教科書上の極量（300 µg）に向けて、患者の血圧・心拍変動を注視しながら慎重に投与してください。";
+        } else if (toxPercent > 80 || (mainCategory !== 'child' && vasoPercent > 80)) {
+            bannerClass = "warning"; iconClass = "fa-triangle-exclamation";
+            msg = "安全上限（極量）の80%に達しています。これ以上の追加投与は避け、治療中のバイタルサインモニタリングを強化してください。";
+        }
+
+        banner.className = `alert-banner ${bannerClass}`;
+        icon.className = `fa-solid ${iconClass}`;
+        text.innerText = msg;
+    }
+
+    window.onload = function() {
+        setMainCategory('adult');
+    };
+</script>
+
+</body>
+</html>
