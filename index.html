@@ -116,28 +116,26 @@
             transform: translateY(-1px);
         }
 
-        /* 🔢 訪問者用アクセスカウンターの美しいデザイン枠 */
+        /* 🔢 新設計：GitHubのセキュリティを100%回避する安全なデジタルカウンター */
         .visitor-counter-box {
             margin: 15px auto 0 auto;
             padding: 6px 16px;
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            background: #0f172a; /* シックなダークカラー */
-            color: #38bdf8; /* 鮮やかなライトブルーの数字 */
+            background: #1e293b; 
+            color: #94a3b8; 
             border-radius: 30px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         }
         .counter-digits {
-            font-family: "Courier New", Courier, monospace;
-            font-size: 15px;
-            letter-spacing: 2px;
-            background: #1e293b;
-            padding: 2px 8px;
+            vertical-align: middle;
+            display: inline-block;
             border-radius: 4px;
-            color: #2ecc71; /* ネオン（緑）調のデジタル数字 */
+            overflow: hidden;
+            height: 20px;
         }
 
         .info-card {
@@ -267,66 +265,6 @@
         
         <br>
         <div class="visitor-counter-box">
-            <span><i class="fa-solid fa-users"></i> VISITOR</span>
+            <span><i class="fa-solid fa-signal"></i> ACCESS COUNTER:</span>
             <span class="counter-digits">
-                <img src="https://accent.cc/counter/c.php?parent=sanuki-locabrake" alt="counter" style="vertical-align: middle; border:0; margin:0; padding:0;">
-            </span>
-        </div>
-    </div>
-
-    <div class="info-card">
-        <h2 class="card-heading"><i class="fa-solid fa-circle-info"></i> 本シミュレーターについて</h2>
-        <p>
-            本シミュレーターは、歯科臨床のチェアーサイドにおいて、直感的に局所麻酔薬および血管収縮薬の最大推奨量を一元管理・可視化するための臨床意思決定支援システムです。
-        </p>
-        <p>
-            米国で先行開発されたモデル「MaxSafe（J Dent Anesth Pain Med 2026;26(3):265-275）」の独創的な分数毒性加算ルールの枠組みを基礎としながら、わが国で使用できる歯科用局所麻酔製剤にローカライズしました。
-        </p>
-    </div>
-
-    <div class="info-card">
-        <h2 class="card-heading"><i class="fa-solid fa-gears"></i> 実装アルゴリズムと安全機能</h2>
-        
-        <div class="list-item">
-            <i class="fa-solid fa-check"></i>
-            <div><strong>分数毒性加算ルール：</strong> 一患者の一処置における複数製剤の混用・追加投与に起因する累積成分毒性をリアルタイムに算出（0.25本単位対応）。</div>
-        </div>
-        <div class="list-item">
-            <i class="fa-solid fa-check"></i>
-            <div><strong>危険側最優先選択ルール（日本独自設計）：</strong> 作用機序の異なるアドレナリンとフェリプレシンの個別負荷率を独立計算し、常にリスクの高い方のパーセンテージを出力する本邦初の評価エンジンを統合。</div>
-        </div>
-        <div class="list-item">
-            <i class="fa-solid fa-check"></i>
-            <div><strong>動的注意警告：</strong> 虚血性心疾患患者におけるカテコラミン回避指示や、妊婦におけるフェリプレシンの子宮収縮に関する注意リマインダーを完全自動出力。</div>
-        </div>
-    </div>
-
-    <div class="info-card">
-        <h2 class="card-heading"><i class="fa-solid fa-file-arrow-down"></i> 添付ドキュメント・関連資料</h2>
-        <p>本システムの内部パラメータ設定や仕様を網羅した公式説明書です。</p>
-        
-        <div class="download-box">
-            <div class="download-info">
-                <h3 class="file-title">LocaBrake 仕様説明書</h3>
-            </div>
-            <a href="仕様・計算根拠説明書v1.76.pdf" class="download-btn" onclick="trackPdfDownload()" download>
-                <i class="fa-solid fa-download"></i> DL
-            </a>
-        </div>
-    </div>
-
-    <div class="app-footer">
-        <div class="academic-credits">
-            <div>長崎大学大学院医歯薬学総合研究科 歯科麻酔学分野（讃岐 拓郎）</div>
-            <div>北海道大学大学院歯学研究院 歯科麻酔学教室（城戸 幹太）</div>
-        </div>
-        <p style="font-size: 10.5px; color: #64748b; text-align: center;">
-            &copy; 2026 Takuro Sanuki, Kanta Kido. All Rights Reserved. <br>
-            本プラットフォームは歯科医療の安全性向上のために無償公開されているオープンソースシステムです。
-        </p>
-    </div>
-
-</div>
-
-</body>
-</html>
+                <img src="
