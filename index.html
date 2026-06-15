@@ -229,7 +229,7 @@
             margin-top: 35px;
         }
 
-        /* 💡 改行を入れず、右側に2行で美しく並べるための正確なテーブルスタイル */
+        /* 💡 所属の頭文字（長・北）と、名前の頭文字（讃・城）を完全に独立させて縦に揃えるためのテーブル */
         .credit-table {
             margin: 0 auto 12px auto;
             font-size: 12px;
@@ -241,13 +241,17 @@
         .credit-table td {
             padding: 0;
             vertical-align: top;
+            text-align: left;
         }
         .credit-label {
-            text-align: left;
             white-space: nowrap;
         }
-        .credit-content {
-            text-align: left;
+        .credit-dept {
+            padding-right: 12px !important; /* 所属と名前の間に一定の隙間（スペース）を作ります */
+            white-space: nowrap;
+        }
+        .credit-name {
+            white-space: nowrap;
         }
     </style>
 </head>
@@ -321,11 +325,13 @@
         <table class="credit-table">
             <tr>
                 <td class="credit-label">開発：</td>
-                <td class="credit-content">長崎大学大学院歯科麻酔学分野 讃岐拓郎</td>
+                <td class="credit-dept">長崎大学大学院歯科麻酔学分野</td>
+                <td class="credit-name">讃岐拓郎</td>
             </tr>
             <tr>
                 <td class="credit-label"></td>
-                <td class="credit-content">北海道大学大学院歯科麻酔学教室 城戸幹太</td>
+                <td class="credit-dept">北海道大学大学院歯科麻酔学教室</td>
+                <td class="credit-name">城戸幹太</td>
             </tr>
         </table>
         
