@@ -229,14 +229,26 @@
             margin-top: 35px;
         }
 
-        .academic-credits {
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            font-size: 11.5px;
+        /* 💡 絶対にズレないグリッド構造のクレジット枠 */
+        .credit-table {
+            margin: 0 auto 12px auto;
+            font-size: 12px;
             font-weight: bold;
             color: #475569;
-            margin-bottom: 10px;
+            border-collapse: collapse;
+            line-height: 1.6;
+        }
+        .credit-table td {
+            padding: 1px 0;
+            vertical-align: top;
+        }
+        .credit-label {
+            text-align: left;
+            padding-right: 4px !important;
+            white-space: nowrap;
+        }
+        .credit-content {
+            text-align: left;
         }
     </style>
 </head>
@@ -307,10 +319,17 @@
     </div>
 
     <div class="app-footer">
-        <div class="academic-credits">
-            <div>長崎大学大学院医歯薬学総合研究科 歯科麻酔学分野（讃岐 拓郎）</div>
-            <div>北海道大学大学院歯学研究院 歯科麻酔学教室（城戸 幹太）</div>
-        </div>
+        <table class="credit-table">
+            <tr>
+                <td class="credit-label">開発:</td>
+                <td class="credit-content">長崎大学大学院歯科麻酔学分野 讃岐拓郎</td>
+            </tr>
+            <tr>
+                <td class="credit-label"></td>
+                <td class="credit-content">北海道大学大学院歯科麻酔学教室 城戸幹太</td>
+            </tr>
+        </table>
+        
         <p style="font-size: 10.5px; color: #64748b; text-align: center;">
             &copy; 2026 Takuro Sanuki, Kanta Kido. All Rights Reserved. <br>
             本プラットフォームは歯科医療の安全性向上のために無償公開されているオープンソースシステムです。
