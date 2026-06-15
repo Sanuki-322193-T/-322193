@@ -116,7 +116,7 @@
             transform: translateY(-1px);
         }
 
-        /* 🔢 新設計：GitHubのセキュリティを100%回避する安全なデジタルカウンター */
+        /* 🔢 エラー（？）を完全に防止する文字式カウンター枠 */
         .visitor-counter-box {
             margin: 15px auto 0 auto;
             padding: 6px 16px;
@@ -129,13 +129,6 @@
             font-size: 11px;
             font-weight: bold;
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-        }
-        .counter-digits {
-            vertical-align: middle;
-            display: inline-block;
-            border-radius: 4px;
-            overflow: hidden;
-            height: 20px;
         }
 
         .info-card {
@@ -265,9 +258,9 @@
         
         <br>
         <div class="visitor-counter-box">
-            <span><i class="fa-solid fa-signal"></i> ACCESS COUNTER:</span>
-            <span class="counter-digits">
-                <img src="https://twocount.com/counter/c.php?id=sanuki_locabrake&style=3" alt="counter" style="display:block; border:0; margin:0; padding:0; height:20px;">
+            <span><i class="fa-solid fa-users"></i> VISITOR COUNT :</span>
+            <span style="font-family: monospace; background: #0f172a; color: #2ecc71; padding: 2px 8px; border-radius: 4px; font-size: 13px; letter-spacing: 1px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);">
+                ONLINE TEST MODE
             </span>
         </div>
     </div>
