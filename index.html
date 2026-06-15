@@ -229,7 +229,7 @@
             margin-top: 35px;
         }
 
-        /* 💡 絶対にズレないグリッド構造のクレジット枠 */
+        /* 💡 改行を入れず、右側に2行で美しく並べるための正確なテーブルスタイル */
         .credit-table {
             margin: 0 auto 12px auto;
             font-size: 12px;
@@ -239,12 +239,11 @@
             line-height: 1.6;
         }
         .credit-table td {
-            padding: 1px 0;
+            padding: 0;
             vertical-align: top;
         }
         .credit-label {
             text-align: left;
-            padding-right: 4px !important;
             white-space: nowrap;
         }
         .credit-content {
@@ -321,7 +320,7 @@
     <div class="app-footer">
         <table class="credit-table">
             <tr>
-                <td class="credit-label">開発:</td>
+                <td class="credit-label">開発：</td>
                 <td class="credit-content">長崎大学大学院歯科麻酔学分野 讃岐拓郎</td>
             </tr>
             <tr>
