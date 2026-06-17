@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafeHome-Navi｜歯科鎮静後帰宅承認システム</title>
+    <style>
+        /* 🎨 スマートで現代的な医療用UIのデザイン設定 */
+        :root {
+            --md-bg: #f8fafc;        /* クリーンな背景（薄いグレー） */
+            --md-card: #ffffff;      /* カード背景 */
+            --md-text: #1e293b;      /* メイン文字色（深いネイビー） */
+            --md-muted: #64748b;     /* 補足文字色 */
+            --md-border: #e2e8f0;    /* 境界線 */
+            --md-primary: #0284c7;   /* プライマリー（信頼感のある医療用ブルー） */
+            --md-lock: #d97706;      /* スタッフロック色（アンバー） */
+            --md-success: #059669;   /* 承認・クリア色（エメラルド） */
+            --md-alert: #0284c7;     /* 出血マイルド案内色 */
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans JP", sans-serif;
+            background-color: var(--md-bg);
+            margin: 0;
+            padding: 30px 15px;
+            color: var(--md-text);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .container {
+            max-width: 620px;
+            margin: 0 auto;
+            background: var(--md-card);
+            padding: 35px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--md-border);
+        }
+
+        /* 🌟 ナビゲーションリンクのスタイル設定 */
+        .nav-links {
+            max-width: 620px;
+            margin: -10px auto 25px auto;
+            font-size: 13px;
+            display: flex;
+            gap: 20px;
+            border-bottom: 1px solid var(--md-border);
+            padding-bottom: 15px;
+        }
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.15s ease;
+        }
+        .nav-back-idx { color: var(--md-primary); }
+        .nav-back-idx:hover { color: #0369a1; }
+        .nav-back-top { color: var(--md-muted); }
+        .nav-back-top:hover { color: var(--md-text); }
+
+        /* タイトルエリア */
+        .app-header {
+            text-align: center;
+            margin-bottom: 35px;
+            border-bottom: 1px solid var(--md-border);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--md-text);
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            margin: 0 0 8px 0;
+        }
+
+        .subtitle {
+            font-size: 14px;
+            color: var(--md-muted);
+            margin: 0;
+            letter-spacing: 0.02em;
+            font-weight: 600;
+        }
+
+        /* スタッフ入力欄 */
+        .input-box {
+            background-color: #fcfbf7;
+            border: 1px solid #f59e0b;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 35px;
+        }
+
+        .staff-title {
+            font-weight: 700;
+            color: #b45309;
+            margin-top: 0;
+            margin-bottom: 15px;
+            font-size: 13px;
+            letter-spacing: 0.05em;
+            display: flex;
+            align-items: center;
+        }
+
+        /* 入力フォームの配置 */
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .form-row:last-of-type {
+            margin-bottom: 15px;
+        }
+
+        .form-group {
+            flex: 1;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--md-muted);
+            margin-bottom: 6px;
+        }
+
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper input {
+            width: 100%;
+            padding: 10px 12px;
+            font-size: 16px;
+            border: 1px solid var(--md-border);
+            border-radius: 6px;
+            color: var(--md-text);
+            background-color: #ffffff;
+            transition: border-color 0.15s ease;
+        }
+
+        .input-wrapper input:focus {
+            outline: none;
+            border-color: var(--md-primary);
+        }
+
+        .input-wrapper input:disabled {
+            background-color: #f1f5f9;
+            color: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .unit-label {
+            margin-left: 8px;
+            font-size: 13px;
+            color: var(--md-muted);
+            white-space: nowrap;
+            font-weight: 600;
+        }
+
+        /* ロックボタン */
+        .btn-lock {
+            background-color: var(--md-lock);
+            color: white;
+            border: none;
+            padding: 10px;
+            width: 100%;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: background-color 0.15s ease;
+        }
+        .btn-lock:hover { background-color: #b45309; }
+
+        /* セクション区切り */
+        .section-divider {
+            text-align: center;
+            font-size: 12px;
+            color: var(--md-muted);
+            margin: 30px 0;
+            position: relative;
+            font-weight: 600;
+        }
+
+        /* 各設問のカードデザイン */
+        .question-block {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+            background-color: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .question-title {
+            font-weight: 700;
+            font-size: 15px;
+            margin-bottom: 15px;
+            color: var(--md-text);
+            line-height: 1.4;
+        }
+
+        /* ラジオボタン選択肢 */
+        .option-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 14px;
+            border: 1px solid var(--md-border);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            background-color: #ffffff;
+            transition: all 0.15s ease;
+        }
+
+        .option-item:hover {
+            background-color: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .option-item input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.15);
+            margin-top: 0;
+        }
+
+        /* 結果表示エリア */
+        .result-area {
+            margin-top: 40px;
+            padding: 25px;
+            border-radius: 8px;
+            border: 1px solid var(--md-border);
+            background-color: #f8fafc;
+            text-align: center;
+        }
+
+        #rTitle {
+            font-size: 18px;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 12px;
+        }
+
+        /* 退院指導のデザイン */
+        .notice-list {
+            text-align: left;
+            background: #ffffff;
+            padding: 18px 20px 18px 35px;
+            border: 1px solid var(--md-border);
+            border-radius: 6px;
+            margin: 15px 0 0 0;
+            font-size: 13.5px;
+        }
+
+        .notice-list li {
+            margin-bottom: 8px;
+            color: #334155;
+        }
+        .notice-list li:last-child { margin-bottom: 0; }
+
+        .mild-alert {
+            color: #334155;
+            font-size: 14px;
+            background-color: #f0f9ff;
+            border: 1px solid #bae6fd;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            text-align: left;
+        }
+
+        /* アクションボタン */
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .btn-action {
+            flex: 1;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: background-color 0.15s ease;
+        }
+        .btn-copy-style { background-color: var(--md-muted); }
+        .btn-copy-style:hover { background-color: #475569; }
+        .btn-email-style { background-color: var(--md-primary); display: none; }
+        .btn-email-style:hover { background-color: #0369a1; }
+
+        /* クレジット＆免責事項 */
+        .app-footer {
+            margin-top: 45px;
+            border-top: 1px solid var(--md-border);
+            padding-top: 20px;
+            font-size: 11px;
+            color: #94a3b8;
+            line-height: 1.5;
+        }
+        .footer-credits {
+            text-align: center;
+            font-weight: 600;
+            color: #64748b;
+            margin-bottom: 10px;
+        }
+        .footer-text {
+            text-align: justify;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <div class="nav-links">
+        <a href="./SafeHomeNavi-index.html" class="nav-back-idx">← 解説画面に戻る</a>
+        <a href="./index.html" class="nav-back-top">プラットフォームトップ</a>
+    </div>
+    
+    <div class="app-header">
+        <h1>歯科鎮静後帰宅承認システム SafeHome-Navi</h1>
+        <div class="subtitle">歯科用 改変PADSSモデル</div>
+    </div>
+    
+    <form id="padssForm">
+        <div class="input-box">
+            <div class="staff-title">🛠️ 医療従事者入力欄（術前基準値 ＆ 通知設定）</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="preSys">術前 最高血圧</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="preSys" value="120" oninput="calcLive()">
+                        <span class="unit-label">mmHg</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="preHr">術前 脈拍</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="preHr" value="70" oninput="calcLive()">
+                        <span class="unit-label">回/分</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="staffEmail">報告先 歯科麻酔科医メールアドレス</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="staffEmail" placeholder="example@nagasaki-u.ac.jp" oninput="calcLive()">
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="lockBtn" class="btn-lock" onclick="toggleLock()">数値を固定して患者さんへ渡す</button>
+        </div>
+
+        <div class="section-divider">▼ ここから患者さん入力エリア</div>
+
+        <div class="question-block">
+            <div class="question-title">① いまの血圧と脈拍の数字を入力してください</div>
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="postSys">上の血圧（最高血圧）</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="postSys" placeholder="例: 115" oninput="calcLive()">
+                        <span class="unit-label">mmHg</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="postHr">脈拍</label>
+                    <div class="input-wrapper">
+                        <input type="number" id="postHr" placeholder="例: 72" oninput="calcLive()">
+                        <span class="unit-label">回/分</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question-block">
+            <div class="question-title">② お部屋の中を少し歩いてしてみて、いかがですか？</div>
+            <div class="option-list">
+                <label class="option-item"><input type="radio" name="walk" value="2" onchange="calcLive()"><span>ふらつきはなく、いつも通りしっかりと歩ける</span></label>
+                <label class="option-item"><input type="radio" name="walk" value="1" onchange="calcLive()"><span>少しふらつく、または誰かに支えてもらえば歩ける</span></label>
+                <label class="option-item"><input type="radio" name="walk" value="0" onchange="calcLive()"><span>めまいがする、または立つのがしんどい</span></label>
+            </div>
+        </div>
+
+        <div class="question-block">
+            <div class="question-title">③ 気持ち悪さ（吐き気）はありますか？</div>
+            <div class="option-list">
+                <label class="option-item"><input type="radio" name="nausea" value="2" onchange="calcLive()"><span>気持ち悪さは全くない（お水も飲めそう）</span></label>
+                <label class="option-item"><input type="radio" name="nausea" value="1" onchange="calcLive()"><span>少しムカムカするが、我慢できる程度</span></label>
+                <label class="option-item"><input type="radio" name="nausea" value="0" onchange="calcLive()"><span>吐き気が強い、または実際に吐いてしまった</span></label>
+            </div>
+        </div>
+
+        <div class="question-block">
+            <div class="question-title">④ お口の痛みはいかがですか？</div>
+            <div class="option-list">
+                <label class="option-item"><input type="radio" name="pain" value="2" onchange="calcLive()"><span>痛くない、または痛み止めを飲めれば落ち着く程度</span></label>
+                <label class="option-item"><input type="radio" name="pain" value="1" onchange="calcLive()"><span>そこそこ痛む（追加の薬や処置がほしい）</span></label>
+                <label class="option-item"><input type="radio" name="pain" value="0" onchange="calcLive()"><span>痛みがかなり強く、耐えられない</span></label>
+            </div>
+        </div>
+
+        <div class="question-block">
+            <div class="question-title">⑤ お口の中の出血（血の味）はどうですか？</div>
+            <div class="option-list">
+                <label class="option-item"><input type="radio" name="bleed" value="2" onchange="calcLive()"><span>血はほとんど止まっている（ツバに少し混じる程度）</span></label>
+                <label class="option-item"><input type="radio" name="bleed" value="1" onchange="calcLive()"><span>まだジワジワ出るが、ガーゼを噛めば止まる</span></label>
+                <label class="option-item"><input type="radio" name="bleed" value="0" onchange="calcLive()"><span>全く止まらない</span></label>
+            </div>
+        </div>
+    </form>
+
+    <div class="result-area" id="resultBlock">
+        <h2 id="rTitle" style="color: var(--md-muted);">📝 入力をお待ちしています</h2>
+        <div id="rMessage" style="font-size: 14px; color: var(--md-muted);">すべての数値を入力し、選択肢を選ぶと、ここに自動で判定結果が出ます。</div>
+        
+        <div class="action-buttons">
+            <button type="button" class="btn-copy-style btn-action" onclick="copyText()">スタッフ用：カルテ用にコピー</button>
+            <button type="button" id="emailBtn" class="btn-action btn-email-style" onclick="sendEmailReport()">📲 歯科麻酔科医に結果を報告する</button>
+        </div>
+    </div>
+
+    <div class="app-footer">
+        <div class="footer-credits">
+            企画：長崎大学大学院歯科麻酔学分野 讃岐拓郎
+        </div>
+        <div class="footer-text">
+            本プラットフォームは歯科医療の安全性向上のために無償公開されているオープンソースシステム群です。各システムの判定および算定結果は、臨床における法的責任や予後を保証するものではありません。実際の臨床における最終的な判断は、必ず担当歯科医師が患者さんの全身状態を総合的に考慮して行ってください。
+        </div>
+    </div>
+</div>
+
+<script>
+var copiedData = "";
+var emailSubject = "";
+var emailBody = "";
+var isLocked = false;
+
+function toggleLock() {
+    var preSysInput = document.getElementById('preSys');
+    var preHrInput = document.getElementById('preHr');
+    var staffEmailInput = document.getElementById('staffEmail');
+    var lockBtn = document.getElementById('lockBtn');
+
+    if (!isLocked) {
+        preSysInput.disabled = true;
+        preHrInput.disabled = true;
+        staffEmailInput.disabled = true;
+        lockBtn.innerHTML = "🔓 数値の固定を解除する（スタッフ専用）";
+        lockBtn.style.backgroundColor = varColor('--md-muted');
+        isLocked = true;
+    } else {
+        preSysInput.disabled = false;
+        preHrInput.disabled = false;
+        staffEmailInput.disabled = false;
+        lockBtn.innerHTML = "数値を固定して患者さんへ渡す";
+        lockBtn.style.backgroundColor = varColor('--md-lock');
+        isLocked = false;
+    }
+}
+
+function varColor(varName) {
+    return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
+}
+
+function getNowTimeString() {
+    var d = new Date();
+    var hh = ("0" + d.getHours()).slice(-2);
+    var mm = ("0" + d.getMinutes()).slice(-2);
+    return hh + "時" + mm + "分";
+}
+
+function calcLive() {
+    var rTitle = document.getElementById('rTitle');
+    var rMessage = document.getElementById('rMessage');
+    var resultBlock = document.getElementById('resultBlock');
+    var emailBtn = document.getElementById('emailBtn');
+
+    var bleedRadio = document.querySelector('input[name="bleed"]:checked');
+    var timestamp = getNowTimeString(); 
+    
+    // 出血0点アラート（即時ロック）
+    if (bleedRadio && parseInt(bleedRadio.value) === 0) {
+        resultBlock.style.borderColor = "#bae6fd";
+        resultBlock.style.backgroundColor = "#fafcfd";
+        rTitle.innerHTML = "💬 スタッフがお口の状態を確認しますね（0点 / 12点満点）";
+        rTitle.style.color = varColor('--md-text');
+        rMessage.innerHTML = "<div class='mild-alert'>" +
+            "ご入力ありがとうございます。<br>" +
+            "お口のなかの出血がまだあるとのことですので、安心してお帰りいただけるように、一度ドクターやスタッフが状態を直接確認させていただきます。<br><br>" +
+            "恐れ入りますが、この画面のまま近くのスタッフにお声がけください。" +
+            "</div>" +
+            "<div style='margin-top:15px; font-size:12px; color:var(--md-muted); font-weight:600;'>⏱️ 判定検出時刻: " + timestamp + "</div>";
+            
+        var currentPreSys = document.getElementById('preSys').value;
+        var currentPreHr = document.getElementById('preHr').value;
+        
+        copiedData = "【SafeHome-Navi結果】合計:0点（※出血0点のため強制ロック）\n★要確認:止血確認および追加処置が必要です。\n[判定時刻] " + timestamp + "\n[スタッフ入力値] 術前BP:" + currentPreSys + "mmHg / HR:" + currentPreHr + "回/分";
+        
+        emailSubject = "【要確認・帰宅保留】SafeHome-Navi 出血0点アラート (" + timestamp + ")";
+        emailBody = copiedData;
+        emailBtn.style.display = "block";
+        return; 
+    }
+
+    var preSys = document.getElementById('preSys').value;
+    var preHr = document.getElementById('preHr').value;
+    var postSys = document.getElementById('postSys').value;
+    var postHr = document.getElementById('postHr').value;
+
+    var walkRadio = document.querySelector('input[name="walk"]:checked');
+    var nauseaRadio = document.querySelector('input[name="nausea"]:checked');
+    var painRadio = document.querySelector('input[name="pain"]:checked');
+
+    if (!preSys || !preHr || !postSys || !postHr || !walkRadio || !nauseaRadio || !painRadio || !bleedRadio) {
+        resultBlock.style.borderColor = varColor('--md-border');
+        resultBlock.style.backgroundColor = "#f8fafc";
+        rTitle.innerHTML = "📝 入力をお待ちしています";
+        rTitle.style.color = varColor('--md-muted');
+        rMessage.innerHTML = "すべての数値を入力し、選択肢を選ぶと、ここに自動で判定結果が出ます。";
+        emailBtn.style.display = "none";
+        return;
+    }
+
+    var pSys = parseFloat(preSys);
+    var pHr = parseFloat(preHr);
+    var sSys = parseFloat(postSys);
+    var sHr = parseFloat(postHr);
+
+    var diffSys = Math.abs((sSys - pSys) / pSys);
+    var sysScore = 0;
+    if (diffSys <= 0.20) sysScore = 2;
+    else if (diffSys <= 0.40) sysScore = 1;
+
+    var diffHr = Math.abs((sHr - pHr) / pHr);
+    var hrScore = 0;
+    if (diffHr <= 0.20) hrScore = 2;
+    else if (diffHr <= 0.40) hrScore = 1;
+
+    var wScore = parseInt(walkRadio.value);
+    var nScore = parseInt(nauseaRadio.value);
+    var pScore = parseInt(painRadio.value);
+    var bScore = parseInt(bleedRadio.value);
+
+    var total = sysScore + hrScore + wScore + nScore + pScore + bScore;
+
+    if (total >= 10 && sysScore > 0 && hrScore > 0) {
+        resultBlock.style.borderColor = varColor('--md-success');
+        resultBlock.style.backgroundColor = "#f0fdf4";
+        
+        rTitle.innerHTML = "🎉 帰宅承認（" + total + "点 / 12点満点）";
+        rTitle.style.color = varColor('--md-success');
+        rMessage.innerHTML = "体調は順順に回復しています。<br><strong style='color:#0f172a;'>【お帰りに関する大切なお約束】</strong><br>" +
+            "<ul class='notice-list'>" +
+            "<li><strong>1) 付き添い：</strong>帰宅の際は付き添いの方がいることが望ましいです。</li>" +
+            "<li><strong>2) 運転禁止：</strong>本日中は自動車、オートバイ、自転車などの運転は絶対に控えてください。</li>" +
+            "<li><strong>3) 緊急連絡：</strong>帰宅中や帰宅後に万が一異常を感じたら、すぐに当院までご連絡ください。</li>" +
+            "<li><strong>4) 安静：</strong>帰宅後は無理をせず、ゆっくりと安静に過ごしてください。</li>" +
+            "</ul>" +
+            "<br><span style='font-size:13px; color:var(--md-muted);'>確認しましたら、この画面のまま受付スタッフに端末をお渡しください。</span>" +
+            "<br><div style='margin-top:15px; font-size:13px; color:var(--md-success); font-weight:700;'>⏱️ 帰宅承認時刻: " + timestamp + "</div>";
+        
+        emailSubject = "【帰宅承認】SafeHome-Navi 判定結果報告 (" + timestamp + ")";
+    } else {
+        resultBlock.style.borderColor = "#f87171";
+        resultBlock.style.backgroundColor = "#fff5f5";
+        rTitle.innerHTML = "📢 もう少しお休みください（" + total + "点 / 12点満点）";
+        rTitle.style.color = "#dc2626";
+        var msg = "まだお薬の影響が残っているか、血圧・脈拍の変動が大きいようです。";
+        if(sysScore === 0 || hrScore === 0) { msg = "血圧または脈拍の数値が、術前に比べて大きく変動しています。"; }
+        rMessage.innerHTML = msg + "<br><br>そのままもうしばらくリラックスしてお休みください。スタッフが様子を見に伺います。" +
+            "<br><div style='margin-top:15px; font-size:12px; color:var(--md-muted); font-weight:600;'>⏱️ 判定時刻: " + timestamp + "</div>";
+        
+        emailSubject = "【経過観察中】SafeHome-Navi 帰宅基準未充足報告 (" + timestamp + ")";
+    }
+
+    var sysPercent = Math.round((sSys / pSys) * 100);
+    var hrPercent = Math.round((sHr / pHr) * 100);
+    
+    copiedData = "【SafeHome-Navi結果】合計:" + total + "点/12点 (血圧:" + sysScore + " 脈拍:" + hrScore + " 歩行:" + wScore + " 吐気:" + nScore + " 疼痛:" + pScore + " 出血:" + bScore + ")\n[承認時刻] " + timestamp + "\n[詳細] 術前BP:" + preSys + "mmHg/HR:" + preHr + "回/分 -> 術後BP:" + postSys + "mmHg(" + sysPercent + "%)/HR:" + sHr + "回/分(" + hrPercent + "%)";
+    emailBody = copiedData;
+    
+    emailBtn.style.display = "block"; 
+}
+
+function copyText() {
+    if(!copiedData) {
+        alert("入力が完了していません。");
+        return;
+    }
+    navigator.clipboard.writeText(copiedData).then(function() {
+        alert("カルテ用テキストをコピーしました！");
+    }).catch(function() {
+        alert("コピーに失敗しました。");
+    });
+}
+
+function sendEmailReport() {
+    var emailAddress = document.getElementById('staffEmail').value;
+    if(!emailAddress) {
+        alert("報告先のメールアドレスが入力されていません。");
+        return;
+    }
+    var mailtoUrl = "mailto:" + emailAddress + 
+                    "?subject=" + encodeURIComponent(emailSubject) + 
+                    "&body=" + encodeURIComponent(emailBody);
+    window.location.href = mailtoUrl;
+}
+</script>
+</body>
+</html>
