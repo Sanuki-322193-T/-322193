@@ -38,26 +38,6 @@
             border: 1px solid var(--md-border);
         }
 
-        /* 🌟 ナビゲーションリンクのスタイル設定 */
-        .nav-links {
-            max-width: 620px;
-            margin: -10px auto 25px auto;
-            font-size: 13px;
-            display: flex;
-            gap: 20px;
-            border-bottom: 1px solid var(--md-border);
-            padding-bottom: 15px;
-        }
-        .nav-links a {
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.15s ease;
-        }
-        .nav-back-idx { color: var(--md-primary); }
-        .nav-back-idx:hover { color: #0369a1; }
-        .nav-back-top { color: var(--md-muted); }
-        .nav-back-top:hover { color: var(--md-text); }
-
         /* タイトルエリア */
         .app-header {
             text-align: center;
@@ -324,11 +304,6 @@
 <body>
 
 <div class="container">
-
-    <div class="nav-links">
-        <a href="./SafeHomeNavi-index.html" class="nav-back-idx">← 解説画面に戻る</a>
-        <a href="./index.html" class="nav-back-top">プラットフォームトップ</a>
-    </div>
     
     <div class="app-header">
         <h1>歯科鎮静後帰宅承認システム SafeHome-Navi</h1>
@@ -437,7 +412,7 @@
 
     <div class="app-footer">
         <div class="footer-credits">
-            企画：長崎大学大学院歯科麻酔学分野 讃岐拓郎
+            開発：長崎大学大学院歯科麻酔学分野 讃岐拓郎
         </div>
         <div class="footer-text">
             本プラットフォームは歯科医療の安全性向上のために無償公開されているオープンソースシステム群です。各システムの判定および算定結果は、臨床における法的責任や予後を保証するものではありません。実際の臨床における最終的な判断は、必ず担当歯科医師が患者さんの全身状態を総合的に考慮して行ってください。
@@ -565,7 +540,7 @@ function calcLive() {
         
         rTitle.innerHTML = "🎉 帰宅承認（" + total + "点 / 12点満点）";
         rTitle.style.color = varColor('--md-success');
-        rMessage.innerHTML = "体調は順順に回復しています。<br><strong style='color:#0f172a;'>【お帰りに関する大切なお約束】</strong><br>" +
+        rMessage.innerHTML = "体調は順調に回復しています。<br><strong style='color:#0f172a;'>【お帰りに関する大切なお約束】</strong><br>" +
             "<ul class='notice-list'>" +
             "<li><strong>1) 付き添い：</strong>帰宅の際は付き添いの方がいることが望ましいです。</li>" +
             "<li><strong>2) 運転禁止：</strong>本日中は自動車、オートバイ、自転車などの運転は絶対に控えてください。</li>" +
@@ -598,6 +573,7 @@ function calcLive() {
     emailBtn.style.display = "block"; 
 }
 
+// クリップボードコピー
 function copyText() {
     if(!copiedData) {
         alert("入力が完了していません。");
@@ -610,6 +586,7 @@ function copyText() {
     });
 }
 
+// メール報告
 function sendEmailReport() {
     var emailAddress = document.getElementById('staffEmail').value;
     if(!emailAddress) {
