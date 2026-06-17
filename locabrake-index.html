@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow"> <title>臨床意思決定支援システム LocaBrake</title>
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-HQLXEE9N65"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-HQLXEE9N65');
+
+      function trackPdfDownload() {
+          gtag('event', 'specification_pdf_download', {
+              'event_category': 'Engagement',
+              'event_label': '仕様・計算根拠説明書.pdf'
+          });
+      }
+
+      function trackAppLaunch() {
+          gtag('event', 'locabrake_launch', {
+              'event_category': 'Navigation',
+              'event_label': 'locabrake.html'
+          });
+      }
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2b7bb9;
+            --primary-hover: #1d5f96;
+            --bg-color: #f8fafc;
+            --text-color: #1e293b;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
+            line-height: 1.7;
+        }
+
+        .container {
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 30px 16px;
+        }
+
+        /* 玄関口（プラットフォームトップ）への戻りリンク */
+        .platform-back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: var(--primary-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .platform-back-link:hover {
+            color: var(--primary-hover);
+        }
+
+        .page-header-group {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+
+        .page-sub-caption {
+            display: block;
+            font-size: 23px;
+            font-weight: 900;
+            color: #475569;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
+        }
+
+        .page-main-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #1e3a8a;
+            margin: 0;
+            line-height: 1.4;
+        }
+
+        .hero-header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, #ffffff, #edf2f7);
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+            margin-bottom: 20px;
+        }
+
+        .cta-button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background-color: var(--primary-color);
+            color: white;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: bold;
+            padding: 14px 28px;
+            border-radius: 10px;
+            box-shadow: 0 8px 12px -3px rgba(43, 123, 185, 0.3);
+            transition: all 0.2s ease;
+            width: 80%;
+            max-width: 300px;
+        }
+
+        .cta-button:hover {
+            background-color: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .visitor-counter-box {
+            margin: 15px auto 0 auto;
+            padding: 6px 16px;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: #1e293b; 
+            color: #94a3b8; 
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: bold;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            padding: 22px;
+            margin-bottom: 16px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+
+        .card-heading {
+            font-size: 14px;
+            font-weight: bold;
+            color: #0f172a;
+            margin-top: 0;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-bottom: 2px solid #edf2f7;
+            padding-bottom: 6px;
+        }
+
+        .card-heading i {
+            color: var(--primary-color);
+        }
+
+        p {
+            font-size: 13px;
+            margin: 0 0 12px 0;
+            color: #334155;
+            text-align: justify;
+        }
+        p:last-child { margin-bottom: 0; }
+
+        .list-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            font-size: 12.5px;
+            color: #334155;
+            margin-bottom: 8px;
+        }
+        .list-item:last-child { margin-bottom: 0; }
+
+        .list-item i {
+            color: #2ecc71;
+            margin-top: 4px;
+            font-size: 11px;
+        }
+
+        .download-box {
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 12px;
+        }
+
+        .download-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .file-title {
+            font-size: 13.5px;
+            font-weight: bold;
+            color: #1e293b;
+            margin: 0;
+        }
+
+        .download-btn {
+            background: white;
+            border: 1px solid #cbd5e1;
+            color: #334155;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 11.5px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.2s;
+        }
+        .download-btn:hover {
+            background: #f1f5f9;
+        }
+
+        .app-footer {
+            text-align: center;
+            padding: 20px 10px;
+            font-size: 11px;
+            color: #64748b;
+            border-top: 1px solid var(--border-color);
+            margin-top: 35px;
+        }
+
+        .credit-table {
+            margin: 0 auto 12px auto;
+            font-size: 12px;
+            font-weight: bold;
+            color: #475569;
+            border-collapse: collapse;
+            line-height: 1.6;
+        }
+        .credit-table td {
+            padding: 0;
+            vertical-align: top;
+            text-align: left;
+        }
+        .credit-label {
+            white-space: nowrap;
+        }
+        .credit-dept {
+            padding-right: 12px !important;
+            white-space: nowrap;
+        }
+        .credit-name {
+            white-space: nowrap;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <a href="index.html" class="platform-back-link">
+        <i class="fa-solid fa-arrow-left"></i> 歯科臨床安全支援プラットフォームに戻る
+    </a>
+
+    <div class="page-header-group">
+        <span class="page-sub-caption">安全な歯科局所麻酔のための</span>
+        <h1 class="page-main-title">臨床意思決定支援システム LocaBrake</h1>
+    </div>
+
+    <div class="hero-header">
+        <a href="locabrake.html" class="cta-button" onclick="trackAppLaunch()">
+            <i class="fa-solid fa-play"></i> LocaBrakeを起動する
+        </a>
+        
+        <br>
+        <div class="visitor-counter-box">
+            <span><i class="fa-solid fa-users"></i> VISITOR COUNT :</span>
+            <span style="font-family: monospace; background: #0f172a; color: #2ecc71; padding: 2px 8px; border-radius: 4px; font-size: 13px; letter-spacing: 1px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);">
+                ONLINE TEST MODE
+            </span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <h2 class="card-heading"><i class="fa-solid fa-circle-info"></i> 本システムについて</h2>
+        <p>
+            本システムは、歯科臨床のチェアーサイドにおいて、直感的に局所麻酔薬および血管収縮薬の最大推奨量を一元管理・可視化するための臨床意思決定支援システムです。局所麻酔中毒や血管収縮薬による全身的偶発症の回避を目的としています。
+        </p>
+        <p>
+            米国で先行開発されたモデル「MaxSafe（J Dent Anesth Pain Med 2026;26(3):265-275）」の枠組みを基礎としながら、わが国で使用できる歯科用局所麻酔製剤にローカライズしました。
+        </p>
+    </div>
+
+    <div class="info-card">
+        <h2 class="card-heading"><i class="fa-solid fa-gears"></i> 実装アルゴリズムと安全機能</h2>
+        
+        <div class="list-item">
+            <i class="fa-solid fa-check"></i>
+            <div><strong>分数毒性加算ルール：</strong>一患者の一処置における複数製剤の混用・追加投与に起因する累積成分毒性をリアルタイムに算出（0.25本単位対応）</div>
+        </div>
+        <div class="list-item">
+            <i class="fa-solid fa-check"></i>
+            <div><strong>危険側最優先選択ルール：</strong>作用機序の異なるアドレナリンとフェリプレシンの個別負荷率を独立計算し、常にリスクの高い方のパーセンテージを出力</div>
+        </div>
+        <div class="list-item">
+            <i class="fa-solid fa-check"></i>
+            <div><strong>動的注意警告：</strong>虚血性心疾患患者におけるアドレナリン回避指示や、妊婦におけるフェリプレシンの子宮収縮に関する注意リマインダーを完全自動出力</div>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <h2 class="card-heading"><i class="fa-solid fa-file-arrow-down"></i> 添付ドキュメント・関連資料</h2>
+        <p>本システムの内部パラメータ設定や仕様を網羅した説明書です。</p>
+        
+        <div class="download-box">
+            <div class="download-info">
+                <h3 class="file-title">仕様・計算根拠説明書</h3>
+            </div>
+            <a href="仕様・計算根拠説明書.pdf" class="download-btn" onclick="trackPdfDownload()" download>
+                <i class="fa-solid fa-download"></i> DL
+            </a>
+        </div>
+    </div>
+
+    <div class="app-footer">
+        <table class="credit-table">
+            <tr>
+                <td class="credit-label">開発：</td>
+                <td class="credit-dept">長崎大学大学院歯科麻酔学分野</td>
+                <td class="credit-name">讃岐拓郎</td>
+            </tr>
+            <tr>
+                <td class="credit-label"></td>
+                <td class="credit-dept">北海道大学大学院歯科麻酔学教室</td>
+                <td class="credit-name">城戸幹太</td>
+            </tr>
+        </table>
+        
+        <p style="font-size: 10.5px; color: #64748b; text-align: center;">
+            &copy; 2026 Takuro Sanuki, Kanta Kido. All Rights Reserved. <br>
+            本プラットフォームは歯科医療の安全性向上のために無償公開されているオープンソースシステムです。
+        </p>
+    </div>
+
+</div>
+
+</body>
+</html>
