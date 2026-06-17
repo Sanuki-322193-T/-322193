@@ -4,17 +4,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="robots" content="noindex, nofollow">
-    <title>歯科鎮静後帰宅承認システム SafeHome-Navi</title>
+    <title>臨床意思決定支援システム SafeHome-Navi</title>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        /* 🎨 シミュレーター画面のトーンと1pxの狂いもなく統一したUI */
         :root {
-            --primary-color: #0284c7;
-            --primary-hover: #0369a1;
-            --bg-color: #f8fafc;
-            --text-color: #1e293b;
-            --card-bg: #ffffff;
-            --border-color: #e2e8f0;
+            --primary-color: #d97706;   /* シミュレーター本体と同一の落ち着いたアンバーオレンジ */
+            --primary-hover: #b45309;   /* ホバー時の深みのあるオレンジ */
+            --bg-color: #f8fafc;        /* クリーンな背景（薄いグレー） */
+            --text-color: #1e293b;      /* メイン文字色（深いネイビー） */
+            --card-bg: #ffffff;         /* カード背景 */
+            --border-color: #e2e8f0;    /* 境界線 */
         }
 
         body {
@@ -24,7 +25,6 @@
             margin: 0;
             padding: 0;
             line-height: 1.7;
-            -webkit-font-smoothing: antialiased;
         }
 
         .container {
@@ -54,27 +54,29 @@
 
         .page-sub-caption {
             display: block;
-            font-size: 21px;
+            font-size: 23px;
             font-weight: 900;
             color: #475569;
             letter-spacing: 0.05em;
             margin-bottom: 10px;
         }
 
+        /* メインタイトルは黒 */
         .page-main-title {
             font-size: 24px;
             font-weight: bold;
-            color: #0f172a;
+            color: #000000; 
             margin: 0;
             line-height: 1.4;
         }
 
+        /* ロカブレーキの仕様と完全に揃えたホワイトフラットなヘッダーボックス */
         .hero-header {
             text-align: center;
             padding: 30px 20px;
-            background: linear-gradient(135deg, #ffffff, #f0f9ff);
+            background: #ffffff;
             border-radius: 20px;
-            border: 1px solid #bae6fd;
+            border: 1px solid var(--border-color);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             margin-bottom: 20px;
         }
@@ -91,10 +93,10 @@
             font-weight: bold;
             padding: 14px 28px;
             border-radius: 10px;
-            box-shadow: 0 8px 12px -3px rgba(2, 132, 199, 0.3);
+            box-shadow: 0 8px 12px -3px rgba(217, 119, 6, 0.2);
             transition: all 0.2s ease;
             width: 80%;
-            max-width: 320px;
+            max-width: 300px;
         }
 
         .cta-button:hover {
@@ -147,7 +149,7 @@
         .list-item:last-child { margin-bottom: 0; }
 
         .list-item i {
-            color: #38bdf8;
+            color: var(--primary-color);
             margin-top: 4px;
             font-size: 11px;
         }
@@ -184,38 +186,38 @@
 
     <div class="hero-header">
         <a href="./SafeHomeNavi.html" class="cta-button">
-            <i class="fa-solid fa-house-medical"></i> SafeHome-Naviを起動する
+            <i class="fa-solid fa-house"></i> SafeHome-Naviを起動する
         </a>
     </div>
 
     <div class="info-card">
         <h2 class="card-heading"><i class="fa-solid fa-circle-info"></i> 本システムについて</h2>
         <p>
-            本システムは、静脈内鎮静法（IVS）をはじめとする歯科麻酔・日帰り手術管理において、患者が安全に我が家（Home）へ帰宅できる基準を満たしているかを客観的かつ定量的に判定するための意思決定支援システムです。
+            本システムは、歯科手術の鎮静において、患者さんが安全に帰宅できる基準を満たしているかを客観的かつ定量的に判定するためのシステムです。
         </p>
         <p>
-            前登載型手術（日帰り手術）の世界的標準指標である「PADSS（Post-Anesthetic Discharge Scoring System）」の枠組みをベースとし、歯科特有の臨床的臨床因子（術後出血の動態、疼痛制御、偶発症リスク等）を考慮して最適化した『歯科用 改変PADSSモデル』を実装しています。
+            世界的標準指標であるPADSS（Post-Anesthetic Discharge Scoring System）の枠組みをベースとし、歯科手術特有の臨床的因子（術後出血等）を考慮して最適化した歯科用 改変PADSSモデルを実装しています。
         </p>
     </div>
 
     <div class="info-card">
-        <h2 class="card-heading"><i class="fa-solid fa-shield-halved"></i> 実装アルゴリズムと安全機能</h2>
+        <h2 class="card-heading"><i class="fa-solid fa-gears"></i> 実装アルゴリズムと安全機能</h2>
         
         <div class="list-item">
-            <i class="fa-solid fa-circle-chevron-right"></i>
-            <div><strong>バイタル変動の動的判定：</strong>術前の最高血圧・脈拍を基準値とし、現在のバイタルが±20%（2点）、±40%（1点）の範囲に収まっているかを完全自動算定。</div>
+            <i class="fa-solid fa-check"></i>
+            <div>術前の最高血圧・脈拍を基準値とし、現在のバイタルが±20%（2点）、±40%（1点）の範囲に収まっているかを完全自動算定。</div>
         </div>
         <div class="list-item">
-            <i class="fa-solid fa-circle-chevron-right"></i>
-            <div><strong>医療スタッフ 入力ロック機能：</strong>術前バイタル基準値をあらかじめ医療側で固定し、誤操作や改ざんを防いだ状態で患者へ端末を渡すことができる安全設計。</div>
+            <i class="fa-solid fa-check"></i>
+            <div><strong>医療スタッフ 入力ロック機能：</strong>術前バイタル基準値をあらかじめ医療側で固定し、誤操作を防いだ状態で患者へ端末を渡すことができる安全設計。</div>
         </div>
         <div class="list-item">
-            <i class="fa-solid fa-circle-chevron-right"></i>
-            <div><strong>出血0点即時アラート（割り込み制御）：</strong>歯科手術において最重要視すべき「お口の中の出血」が止まらない（0点判定）場合、合計点数に関わらず自動的に帰宅保留とし、スタッフへ直接の確認を促すマイルドブロック機能を搭載。</div>
+            <i class="fa-solid fa-check"></i>
+            <div><strong>出血0点即時アラート（割り込み制御）：</strong>歯科手術において重要視すべき「お口の中の出血」が止まらない場合、合計点数に関わらず自動的に帰宅保留とし、スタッフの確認を促すマイルドブロック機能を搭載。</div>
         </div>
         <div class="list-item">
-            <i class="fa-solid fa-circle-chevron-right"></i>
-            <div><strong>歯科麻酔科医へのリアルタイム報告連携：</strong>判定結果と詳細なバイタル比率、タイムスタンプを即座にカルテ用テキストとして生成。ボタン一つで担当の歯科麻酔科医へメーラーを介して直接シームレスにデジタル報告が可能です。</div>
+            <i class="fa-solid fa-check"></i>
+            <div><strong>カルテ用テキストの生成と麻酔科医への報告：</strong>判定結果を即座にカルテ用テキストとして生成。ボタン一つで担当の歯科麻酔科医へメールを介してデジタル報告が可能。</div>
         </div>
     </div>
 
@@ -224,7 +226,7 @@
             企画：長崎大学大学院歯科麻酔学分野 讃岐拓郎
         </div>
         <p style="font-size: 10.5px; color: #64748b; text-align: center;">
-            本プラットフォームは歯科医療の安全性向上のために無償公開されているオープンソースシステムです。<br>
+            本プラットフォームは歯科医療の安全性向上のために無償公開されているオープンソースシステム群です。<br>
             実際の臨床における最終的な判断は、必ず担当歯科医師が患者さんの全身状態を総合的に考慮して行ってください。
         </p>
     </div>
