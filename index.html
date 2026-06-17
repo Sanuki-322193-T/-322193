@@ -58,13 +58,14 @@
             margin-bottom: 24px;
         }
 
+        /* 💡 文字サイズと太さはそのままに、カラーを #334155 から少しだけ薄い #475569 へ微調整しました */
         .page-sub-caption {
             display: block;
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 23px;
+            font-weight: 900;
             color: #475569;
-            letter-spacing: 0.1em;
-            margin-bottom: 6px;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
         }
 
         .page-main-title {
@@ -83,14 +84,6 @@
             border: 1px solid var(--border-color);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
             margin-bottom: 20px;
-        }
-
-        .system-title {
-            font-size: 22px;
-            font-weight: bold;
-            color: #0f172a;
-            margin: 0 0 18px 0;
-            letter-spacing: 0.05em;
         }
 
         .cta-button {
@@ -258,15 +251,13 @@
 <div class="container">
 
     <div class="page-header-group">
-        <span class="page-sub-caption">臨床意思決定支援システム</span>
-        <h1 class="page-main-title">歯科局所麻酔製剤安全シミュレーター</h1>
+        <span class="page-sub-caption">安全な歯科局所麻酔のための</span>
+        <h1 class="page-main-title">臨床意思決定支援システム LocaBrake</h1>
     </div>
 
     <div class="hero-header">
-        <div class="system-title">LocaBrake（ロカブレーキ）</div>
-        
         <a href="locabrake.html" class="cta-button" onclick="trackAppLaunch()">
-            <i class="fa-solid fa-play"></i> シミュレーターを起動する
+            <i class="fa-solid fa-play"></i> LocaBrakeを起動する
         </a>
         
         <br>
@@ -279,12 +270,12 @@
     </div>
 
     <div class="info-card">
-        <h2 class="card-heading"><i class="fa-solid fa-circle-info"></i> 本シミュレーターについて</h2>
+        <h2 class="card-heading"><i class="fa-solid fa-circle-info"></i> 本システムについて</h2>
         <p>
-            本シミュレーターは、歯科臨床のチェアーサイドにおいて、直感的に局所麻酔薬および血管収縮薬の最大推奨量を一元管理・可視化するための臨床意思決定支援システムです。局所麻酔中毒や血管収縮薬による全身的偶発症の 回避 を目的としています。
+            本システムは、歯科臨床のチェアーサイドにおいて、直感的に局所麻酔薬および血管収縮薬の最大推奨量を一元管理・可視化するための臨床意思決定支援システムです。局所麻酔中毒や血管収縮薬による全身的偶発症の回避を目的としています。
         </p>
         <p>
-            米国で先行開発されたモデル「MaxSafe（J Dent Anesth Pain Med 2026;26(3):265-275）」の独創的な分数毒性加算ルールの枠組みを基礎としながら、わが国で使用できる歯科用局所麻酔製剤にローカライズしました。
+            米国で先行開発されたモデル「MaxSafe（J Dent Anesth Pain Med 2026;26(3):265-275）」の枠組みを基礎としながら、わが国で使用できる歯科用局所麻酔製剤にローカライズしました。
         </p>
     </div>
 
