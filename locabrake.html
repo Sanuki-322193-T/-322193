@@ -45,19 +45,31 @@
 
         .app-header {
             background: linear-gradient(135deg, #ffffff, #edf2f7);
-            padding: 14px 12px;
+            padding: 16px 12px;
             text-align: center;
             border-bottom: 1px solid var(--border-color);
             position: relative;
         }
+        
+        .page-sub-caption {
+            display: block;
+            font-size: 13.5px;
+            font-weight: 800;
+            color: #475569;
+            letter-spacing: 0.03em;
+            margin-bottom: 5px;
+            line-height: 1.3;
+        }
+
         .title-wrapper {
             display: flex;
-            align-items: baseline;
+            align-items: center;
             justify-content: center;
             gap: 6px;
+            flex-wrap: wrap;
         }
         .app-title {
-            font-size: 14.5px;
+            font-size: 15px;
             font-weight: bold;
             color: #1e3a8a;
             margin: 0;
@@ -410,8 +422,9 @@
 
 <div class="phone-container">
     <div class="app-header">
+        <span class="page-sub-caption">安全な歯科局所麻酔のための</span>
         <div class="title-wrapper">
-            <h1 class="app-title">歯科局所麻酔製剤安全シミュレーター LocaBrake</h1>
+            <h1 class="app-title">臨床意思決定支援システム LocaBrake</h1>
             <span class="app-version">Ver 1.76</span>
         </div>
     </div>
@@ -448,7 +461,7 @@
                     <div class="weight-display-label">患者の体重</div>
                     <div class="weight-value-badge"><span id="weight-txt">50</span> kg</div>
                 </div>
-                <input type="range" id="weight-slider" class="weight-slider" min="25" max="120" value="50" step="1" oninput="onSliderChange(this.value)" onchange="onSliderChange(this.value)">
+                <input type="range" id="weight-slider" class="weight-slider" min="25" max="120" value="50" step="1" oninput="updateWeightFromSlider(this.value)" onchange="updateWeightFromSlider(this.value)">
             </div>
         </div>
 
@@ -580,7 +593,7 @@
 
     <div class="app-footer">
         <div class="copyright-text">
-            &copy; 2026 Takuro Sanuki, Kanta Kido. 本プログラムは歯科医療の安全性向上のために無償公開されているオープンソースソフトウェアです。営利目的の無断転載・販売を禁じます。
+            &copy; 2026 Takuro Sanuki, Kanta Kido. 本プログラムは歯科医療の安全性向上のために無償公開されているオープンソースシステムです。営利目的の無断転載・販売を禁じます。
         </div>
 
         <div class="developer-box">
@@ -596,7 +609,7 @@
             </div>
         </div>
         
-        <div>本アプリの判定は、法的責任の判断や予後を保証するものではありません。臨床における最終的な投与判断は、必ず術者が患者さんの全身状態を総合的に考慮して行ってください。</div>
+        <div>本システムの判定は、法的責任や予後を保証するものではありません。臨床における最終的な投与判断は、必ず術者が患者さんの全身状態を総合的に考慮して行ってください。</div>
     </div>
 </div>
 
@@ -615,7 +628,7 @@
         mepi:      { mg_per_cart: 54, adrenaline: 0,      feli: 0,     mrd_adult_mg: 500, mrd_adult_mg_kg: 6, mrd_child_mg_kg: 4.4 }
     };
 
-    function onSliderChange(val) {
+    function updateWeightFromSlider(val) {
         document.getElementById('weight-txt').innerText = val;
         updateCalculations();
     }
