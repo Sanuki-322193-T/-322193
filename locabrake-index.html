@@ -25,6 +25,19 @@
               'event_label': 'locabrake.html'
           });
       }
+
+      document.addEventListener("DOMContentLoaded", function() {
+          const counterEl = document.getElementById("visitor-count");
+          fetch("https://api.counterapi.dev/v1/locabrake/homepage/up")
+              .then(response => response.json())
+              .then(data => {
+                  counterEl.innerText = String(data.count).padStart(6, '0');
+              })
+              .catch(error => {
+                  console.error("Counter API Error:", error);
+                  counterEl.innerText = "------";
+              });
+      });
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -51,20 +64,6 @@
             max-width: 680px;
             margin: 0 auto;
             padding: 30px 16px;
-        }
-
-        /* 玄関口（プラットフォームトップ）への戻りリンク */
-        .platform-back-link {
-            display: inline-block;
-            margin-bottom: 20px;
-            font-size: 13px;
-            color: var(--primary-color);
-            text-decoration: none;
-            font-weight: 600;
-            transition: color 0.2s;
-        }
-        .platform-back-link:hover {
-            color: var(--primary-hover);
         }
 
         .page-header-group {
@@ -263,10 +262,6 @@
 
 <div class="container">
 
-    <a href="index.html" class="platform-back-link">
-        <i class="fa-solid fa-arrow-left"></i> 歯科臨床安全支援プラットフォームに戻る
-    </a>
-
     <div class="page-header-group">
         <span class="page-sub-caption">安全な歯科局所麻酔のための</span>
         <h1 class="page-main-title">臨床意思決定支援システム LocaBrake</h1>
@@ -280,8 +275,8 @@
         <br>
         <div class="visitor-counter-box">
             <span><i class="fa-solid fa-users"></i> VISITOR COUNT :</span>
-            <span style="font-family: monospace; background: #0f172a; color: #2ecc71; padding: 2px 8px; border-radius: 4px; font-size: 13px; letter-spacing: 1px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);">
-                ONLINE TEST MODE
+            <span id="visitor-count" style="font-family: monospace; background: #0f172a; color: #2ecc71; padding: 2px 8px; border-radius: 4px; font-size: 13px; letter-spacing: 1px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);">
+                LOADING...
             </span>
         </div>
     </div>
@@ -305,11 +300,11 @@
         </div>
         <div class="list-item">
             <i class="fa-solid fa-check"></i>
-            <div><strong>危険側最優先選択ルール：</strong>作用機序の異なるアドレナリンとフェリプレシンの個別負荷率を独立計算し、常にリスクの高い方のパーセンテージを出力</div>
+            <div><strong>二重上限監視ルール：</strong>作用機序の異なるアドレナリンとフェリプレシンの負荷率を統合（相加）せず、独立した並列メーターとして同時に出力し、2種類の血管収縮薬による心血管負荷をそれぞれ可視化</div>
         </div>
         <div class="list-item">
             <i class="fa-solid fa-check"></i>
-            <div><strong>動的注意警告：</strong>虚血性心疾患患者におけるアドレナリン回避指示や、妊婦におけるフェリプレシンの子宮収縮に関する注意リマインダーを完全自動出力</div>
+            <div><strong>動的注意警告：</strong>虚血性心疾患患者におけるアドレナリン回避指示や、妊婦におけるフェリプレシンの子宮収縮に関する注意リマインダーを自動出力</div>
         </div>
     </div>
 
