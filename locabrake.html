@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="format-detection" content="telephone=no">
-    <title>歯科局所麻酔製剤安全シミュレーター LocaBrake Ver 1.76</title>
+    <title>歯科局所麻酔製剤安全シミュレーター LocaBrake Ver 2.0</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -425,7 +425,7 @@
         <span class="page-sub-caption">安全な歯科局所麻酔のための</span>
         <div class="title-wrapper">
             <h1 class="app-title">臨床意思決定支援システム LocaBrake</h1>
-            <span class="app-version">Ver 1.76</span>
+            <span class="app-version">Ver 2.0</span>
         </div>
     </div>
 
@@ -566,20 +566,36 @@
                 </div>
             </div>
 
-            <div class="meter-block" id="vaso-meter-block">
-                <div class="meter-header" id="vaso-header">
-                    <div class="meter-title">
-                        <i class="fa-solid fa-heart-pulse" style="color: #64748b; font-size: 10px;"></i>
-                        <span>血管収縮薬 心血管負荷度</span>
+            <div id="vaso-meters-container" style="display: flex; flex-direction: column; gap: 10px;">
+                <div class="meter-block">
+                    <div class="meter-header">
+                        <div class="meter-title">
+                            <i class="fa-solid fa-heart-pulse" style="color: #64748b; font-size: 10px;"></i>
+                            <span>アドレナリン 負荷度</span>
+                        </div>
+                        <span id="txt-adrenaline-percent">0.0%</span>
                     </div>
-                    <span id="txt-adrenaline-percent">0.0%</span>
+                    <div class="meter-bar-wrapper">
+                        <div class="meter-bar-fill" id="bar-adrenaline"></div>
+                    </div>
                 </div>
-                <div class="meter-bar-wrapper" id="vaso-bar-wrapper">
-                    <div class="meter-bar-fill" id="bar-vasoconstrictor"></div>
+
+                <div class="meter-block">
+                    <div class="meter-header">
+                        <div class="meter-title">
+                            <i class="fa-solid fa-heart-pulse" style="color: #64748b; font-size: 10px;"></i>
+                            <span>フェリプレシン 負荷度</span>
+                        </div>
+                        <span id="txt-feli-percent">0.0%</span>
+                    </div>
+                    <div class="meter-bar-wrapper">
+                        <div class="meter-bar-fill" id="bar-feli"></div>
+                    </div>
                 </div>
-                <div class="child-warning-box" id="child-warning-panel" style="display: none;">
-                    <strong>【注意】</strong>小児における血管収縮薬の体重ベースの安全上限（極量）は国内外で確立されていません。そのため、投与中および投与直後は、患者の全身状態、特に血圧や心拍数を確認しながら、必要最小限の投与にとどめてください。
-                </div>
+            </div>
+
+            <div class="child-warning-box" id="child-warning-panel" style="display: none;">
+                <strong>【注意】</strong>小児における血管収縮薬の体重ベースの安全上限（極量）は国内外で確立されていません。そのため、投与中および投与直後は、患者の全身状態、特に血圧や心拍数を確認しながら、必要最小限の投与にとどめてください。
             </div>
 
         </div>
@@ -655,17 +671,14 @@
         document.getElementById('adult-risk-section').style.display = cat === 'adult' ? 'block' : 'none';
         document.getElementById('age-row').style.display = cat === 'child' ? 'flex' : 'none';
         
-        const txtVasoPercent = document.getElementById('txt-adrenaline-percent');
-        const vasoBarWrapper = document.getElementById('vaso-bar-wrapper');
+        const vasoMetersContainer = document.getElementById('vaso-meters-container');
         const childWarningPanel = document.getElementById('child-warning-panel');
 
         if (cat === 'child') {
-            txtVasoPercent.style.display = 'none';
-            vasoBarWrapper.style.display = 'none';
+            vasoMetersContainer.style.display = 'none';
             childWarningPanel.style.display = 'block';
         } else {
-            txtVasoPercent.style.display = 'inline';
-            vasoBarWrapper.style.display = 'block';
+            vasoMetersContainer.style.display = 'flex';
             childWarningPanel.style.display = 'none';
         }
         
@@ -778,28 +791,39 @@
         updateMeterDOM('bar-tox', 'txt-tox-percent', toxPercent, 80, 100);
         
         if (mainCategory === 'adult' && adultRiskMode === 'normal') {
+            // アドレナリンの独立描画（正常時0.2mg/0.3mgの階段閾値）
             let adrenalineMg = totalAdrenalineAdministered;
-            let currentVasoPercent = 0; let barColorClass = 'var(--safe-color)';
+            let currentAdrenPercent = (adrenalineMg / 0.30) * 100;
+            let adrenColorClass = 'var(--safe-color)';
+            if (adrenalineMg <= 0.20) adrenColorClass = 'var(--safe-color)'; 
+            else if (adrenalineMg <= 0.30) adrenColorClass = 'var(--warning-color)'; 
+            else adrenColorClass = 'var(--danger-color)';
             
-            if (totalFeliAdministered > 0 && feliLoadPercent > (adrenalineMg / 0.30 * 100)) {
-                currentVasoPercent = feliLoadPercent;
-                if (currentVasoPercent <= 80) barColorClass = 'var(--safe-color)';
-                else if (currentVasoPercent <= 100) barColorClass = 'var(--warning-color)';
-                else barColorClass = 'var(--danger-color)';
-            } else {
-                currentVasoPercent = (adrenalineMg / 0.30) * 100;
-                if (adrenalineMg <= 0.20) barColorClass = 'var(--safe-color)'; 
-                else if (adrenalineMg <= 0.30) barColorClass = 'var(--warning-color)'; 
-                else barColorClass = 'var(--danger-color)'; 
-            }
-            const bar = document.getElementById('bar-vasoconstrictor');
-            const text = document.getElementById('txt-adrenaline-percent');
-            let displayPercent = Math.min(currentVasoPercent, 200).toFixed(1) + "%";
-            text.innerText = currentVasoPercent > 100 ? displayPercent + " (極量超過)" : displayPercent;
-            bar.style.width = Math.min(currentVasoPercent, 100) + "%"; bar.style.backgroundColor = barColorClass;
+            const adrenBar = document.getElementById('bar-adrenaline');
+            const adrenText = document.getElementById('txt-adrenaline-percent');
+            let displayAdren = Math.min(currentAdrenPercent, 200).toFixed(1) + "%";
+            adrenText.innerText = currentAdrenPercent > 100 ? displayAdren + " (極量超過)" : displayAdren;
+            adrenBar.style.width = Math.min(currentAdrenPercent, 100) + "%"; 
+            adrenBar.style.backgroundColor = adrenColorClass;
+
+            // フェリプレシンの独立描画（正常時閾値）
+            let currentFeliPercent = feliLoadPercent;
+            let feliColorClass = 'var(--safe-color)';
+            if (currentFeliPercent <= 80) feliColorClass = 'var(--safe-color)';
+            else if (currentFeliPercent <= 100) feliColorClass = 'var(--warning-color)';
+            else feliColorClass = 'var(--danger-color)';
+
+            const feliBar = document.getElementById('bar-feli');
+            const feliText = document.getElementById('txt-feli-percent');
+            let displayFeli = Math.min(currentFeliPercent, 200).toFixed(1) + "%";
+            feliText.innerText = currentFeliPercent > 100 ? displayFeli + " (極量超過)" : displayFeli;
+            feliBar.style.width = Math.min(currentFeliPercent, 100) + "%"; 
+            feliBar.style.backgroundColor = feliColorClass;
             
         } else if (mainCategory !== 'child') {
-            updateMeterDOM('bar-vasoconstrictor', 'txt-adrenaline-percent', maxVasoLoadPercent, 80, 100);
+            // リスクありモード時は通常のupdateMeterDOMで独立描画
+            updateMeterDOM('bar-adrenaline', 'txt-adrenaline-percent', adrenalineLoadPercent, 80, 100);
+            updateMeterDOM('bar-feli', 'txt-feli-percent', feliLoadPercent, 80, 100);
         }
 
         updateBannerDOM(toxPercent, maxVasoLoadPercent, isArticBlocked, totalAdrenalineAdministered, totalFeliAdministered);
