@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="format-detection" content="telephone=no">
-    <title>歯科局所麻酔製剤安全シミュレーター LocaBrake Ver 2.0</title>
+    <title>歯科局所麻酔製剤安全シミュレーター LocaBrake Ver 2.1</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -425,7 +425,7 @@
         <span class="page-sub-caption">安全な歯科局所麻酔のための</span>
         <div class="title-wrapper">
             <h1 class="app-title">臨床意思決定支援システム LocaBrake</h1>
-            <span class="app-version">Ver 2.0</span>
+            <span class="app-version">Ver 2.1</span>
         </div>
     </div>
 
@@ -635,11 +635,13 @@
     let adultRiskMode = 'normal'; 
     let drugCounts = { lido: 0, lido_t18: 0, lido_t10: 0, artic: 0, prilo: 0, mepi: 0 };
 
+    // Reviewer 1 & 2 対応: ORA注のアドレナリン量を塩基換算値(0.0247, 0.0137)に補正
+    // Reviewer 3 対応: アルチカインおよびメピバカインに絶対上限(500mg)を追加実装
     const DRUG_SPECS = {
         lido:      { mg_per_cart: 36, adrenaline: 0.0225, feli: 0,     mrd_adult_mg: 500, mrd_adult_mg_kg: 7, mrd_child_mg_kg: 4.4 },
-        lido_t18:  { mg_per_cart: 36, adrenaline: 0.0246, feli: 0,     mrd_adult_mg: 500, mrd_adult_mg_kg: 7, mrd_child_mg_kg: 4.4 }, 
+        lido_t18:  { mg_per_cart: 36, adrenaline: 0.0247, feli: 0,     mrd_adult_mg: 500, mrd_adult_mg_kg: 7, mrd_child_mg_kg: 4.4 }, 
         lido_t10:  { mg_per_cart: 20, adrenaline: 0.0137, feli: 0,     mrd_adult_mg: 500, mrd_adult_mg_kg: 7, mrd_child_mg_kg: 4.4 }, 
-        artic:     { mg_per_cart: 68, adrenaline: 0.017,  feli: 0,     mrd_adult_mg: null,mrd_adult_mg_kg: 7, mrd_child_mg_kg: 7 },
+        artic:     { mg_per_cart: 68, adrenaline: 0.017,  feli: 0,     mrd_adult_mg: 500, mrd_adult_mg_kg: 7, mrd_child_mg_kg: 7 },
         prilo:     { mg_per_cart: 54, adrenaline: 0,      feli: 0.054, mrd_adult_mg: 400, mrd_adult_mg_kg: null,mrd_child_mg_kg: 6 },
         mepi:      { mg_per_cart: 54, adrenaline: 0,      feli: 0,     mrd_adult_mg: 500, mrd_adult_mg_kg: 6, mrd_child_mg_kg: 4.4 }
     };
@@ -746,6 +748,8 @@
             document.getElementById('prilo-spec').innerText = "3%製剤 (1.8mL) / フェリプレシン 0.03U/mL 配合";
         }
 
+        // 分数毒性加算ルール (Fractional Toxicity Addition Rule)
+        // 体重ベースの限界値と絶対上限(キャップ)が競合する場合は、Math.min関数により低い方を分母として優先適用
         let totalFractionalToxicity = 0;
         for (let drug in drugCounts) {
             let count = drugCounts[drug]; if (count === 0) continue;
@@ -769,6 +773,8 @@
                                           (drugCounts.artic * DRUG_SPECS.artic.adrenaline);
         let totalFeliAdministered = drugCounts.prilo * DRUG_SPECS.prilo.feli;
 
+        // 血管収縮薬 二重上限監視ルール (Dual-Ceiling Monitoring Rule)
+        // フェリプレシンの上限値(0.18, 0.108)は日本の標準的テキスト(歯科国試パーフェクトマスター)等に基づく
         let adrenalineLimit = 0.30; 
         let feliLimit = 0.40;       
 
