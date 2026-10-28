@@ -635,12 +635,12 @@
     let adultRiskMode = 'normal'; 
     let drugCounts = { lido: 0, lido_t18: 0, lido_t10: 0, artic: 0, prilo: 0, mepi: 0 };
 
-    // Reviewer 1 & 2 対応: ORA注のアドレナリン量を塩基換算値(0.0247, 0.0137)に補正
-    // Reviewer 3 対応: アルチカインおよびメピバカインに絶対上限(500mg)を追加実装
+    // ORA注アドレナリン量を塩基換算値(0.0247, 0.0137)に補正
+    // アルチカインおよびメピバカインに絶対上限(500mg)を追加実装
     const DRUG_SPECS = {
         lido:      { mg_per_cart: 36, adrenaline: 0.0225, feli: 0,     mrd_adult_mg: 500, mrd_adult_mg_kg: 7, mrd_child_mg_kg: 4.4 },
-        lido_t18:  { mg_per_cart: 36, adrenaline: 0.0247, feli: 0,     mrd_adult_mg: 500, mrd_adult_mg_kg: 7, mrd_child_mg_kg: 4.4 }, 
-        lido_t10:  { mg_per_cart: 20, adrenaline: 0.0137, feli: 0,     mrd_adult_mg: 500, mrd_adult_mg_kg: 7, mrd_child_mg_kg: 4.4 }, 
+        lido_t18:  { mg_per_cart: 36, adrenaline: 0.0247, feli: 0,     mrd_adult_mg: 500, mrd_adult_mg_kg: 7, mrd_child_mg_kg: 4.4 },
+        lido_t10:  { mg_per_cart: 20, adrenaline: 0.0137, feli: 0,     mrd_adult_mg: 500, mrd_adult_mg_kg: 7, mrd_child_mg_kg: 4.4 },
         artic:     { mg_per_cart: 68, adrenaline: 0.017,  feli: 0,     mrd_adult_mg: 500, mrd_adult_mg_kg: 7, mrd_child_mg_kg: 7 },
         prilo:     { mg_per_cart: 54, adrenaline: 0,      feli: 0.054, mrd_adult_mg: 400, mrd_adult_mg_kg: 6, mrd_child_mg_kg: 6 },
         mepi:      { mg_per_cart: 54, adrenaline: 0,      feli: 0,     mrd_adult_mg: 500, mrd_adult_mg_kg: 6, mrd_child_mg_kg: 4.4 }
@@ -748,8 +748,6 @@
             document.getElementById('prilo-spec').innerText = "3%製剤 (1.8mL) / フェリプレシン 0.03U/mL 配合";
         }
 
-        // 分数毒性加算ルール (Fractional Toxicity Addition Rule)
-        // 体重ベースの限界値と絶対上限(キャップ)が競合する場合は、Math.min関数により低い方を分母として優先適用
         let totalFractionalToxicity = 0;
         for (let drug in drugCounts) {
             let count = drugCounts[drug]; if (count === 0) continue;
@@ -773,20 +771,18 @@
                                           (drugCounts.artic * DRUG_SPECS.artic.adrenaline);
         let totalFeliAdministered = drugCounts.prilo * DRUG_SPECS.prilo.feli;
 
-        // 血管収縮薬 二重上限監視ルール (Dual-Ceiling Monitoring Rule)
-        // フェリプレシンの上限値(0.18, 0.108)は日本の標準的テキスト(歯科国試パーフェクトマスター)等に基づく
         let adrenalineLimit = 0.30; 
         let feliLimit = 0.40;       
 
         if (mainCategory === 'adult') {
             if (adultRiskMode === 'mild') {
-                adrenalineLimit = 0.045; feliLimit = 0.18; 
+                adrenalineLimit = 0.045; feliLimit = 0.18;
             } else if (adultRiskMode === 'severe') {
-                adrenalineLimit = 0.0225; feliLimit = 0.18; 
+                adrenalineLimit = 0.0225; feliLimit = 0.18;
             } else if (adultRiskMode === 'cardiac') {
-                adrenalineLimit = 0.0001; feliLimit = 0.108; 
+                adrenalineLimit = 0.0001; feliLimit = 0.108;
             } else if (adultRiskMode === 'pregnant') {
-                adrenalineLimit = 0.045; feliLimit = 0.40; 
+                adrenalineLimit = 0.045; feliLimit = 0.40;
             }
         }
 
@@ -797,7 +793,6 @@
         updateMeterDOM('bar-tox', 'txt-tox-percent', toxPercent, 80, 100);
         
         if (mainCategory === 'adult' && adultRiskMode === 'normal') {
-            // アドレナリンの独立描画（正常時0.2mg/0.3mgの階段閾値）
             let adrenalineMg = totalAdrenalineAdministered;
             let currentAdrenPercent = (adrenalineMg / 0.30) * 100;
             let adrenColorClass = 'var(--safe-color)';
@@ -812,7 +807,6 @@
             adrenBar.style.width = Math.min(currentAdrenPercent, 100) + "%"; 
             adrenBar.style.backgroundColor = adrenColorClass;
 
-            // フェリプレシンの独立描画（正常時閾値）
             let currentFeliPercent = feliLoadPercent;
             let feliColorClass = 'var(--safe-color)';
             if (currentFeliPercent <= 80) feliColorClass = 'var(--safe-color)';
@@ -827,7 +821,6 @@
             feliBar.style.backgroundColor = feliColorClass;
             
         } else if (mainCategory !== 'child') {
-            // リスクありモード時は通常のupdateMeterDOMで独立描画
             updateMeterDOM('bar-adrenaline', 'txt-adrenaline-percent', adrenalineLoadPercent, 80, 100);
             updateMeterDOM('bar-feli', 'txt-feli-percent', feliLoadPercent, 80, 100);
         }
@@ -874,7 +867,8 @@
             }
         } else if (mainCategory === 'adult' && adultRiskMode === 'normal' && totalAdrenaline > 0.20) {
             bannerClass = "warning"; iconClass = "fa-triangle-exclamation";
-            msg = "【注意】アドレナリンの推奨上限（200 µg）を超過しました。教科書上の極量（300 µg）に向けて、患者の血圧・心拍変動を注視しながら慎重に投与してください。";
+            // 修正：「極量（300 µg）」に統一
+            msg = "【注意】アドレナリンの推奨上限（200 µg）を超過しました。極量（300 µg）の範囲内であることを確認し、患者の血圧・心拍変動を注視しながら慎重に投与してください。";
         } else if (toxPercent > 80 || (mainCategory !== 'child' && vasoPercent > 80)) {
             bannerClass = "warning"; iconClass = "fa-triangle-exclamation";
             msg = "安全上限（極量）の80%に達しています。これ以上の追加投与は避け、治療中のバイタルサインモニタリングを強化してください。";
