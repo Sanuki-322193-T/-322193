@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="format-detection" content="telephone=no">
-    <title>歯科局所麻酔製剤安全シミュレーター LocaBrake Ver 2.1</title>
+    <title>歯科局所麻酔製剤安全シミュレーター LocaBrake Ver 2.2</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
@@ -425,7 +425,7 @@
         <span class="page-sub-caption">安全な歯科局所麻酔のための</span>
         <div class="title-wrapper">
             <h1 class="app-title">臨床意思決定支援システム LocaBrake</h1>
-            <span class="app-version">Ver 2.1</span>
+            <span class="app-version">Ver 2.2</span>
         </div>
     </div>
 
@@ -665,7 +665,17 @@
         updateCalculations();
     }
 
+    function hasAnyDrugCount() {
+        return Object.values(drugCounts).some(c => c > 0);
+    }
+
     function setMainCategory(cat) {
+        if (mainCategory === cat) return;
+        if (hasAnyDrugCount()) {
+            if (!window.confirm('モードを変更すると、現在入力されている投与本数がリセットされます。よろしいですか？')) {
+                return;
+            }
+        }
         mainCategory = cat;
         document.getElementById('tab-adult').classList.toggle('active', cat === 'adult');
         document.getElementById('tab-child').classList.toggle('active', cat === 'child');
@@ -699,6 +709,12 @@
     }
 
     function setAdultRisk(risk) {
+        if (adultRiskMode === risk) return;
+        if (hasAnyDrugCount()) {
+            if (!window.confirm('リスク区分を変更すると、現在入力されている投与本数がリセットされます。よろしいですか？')) {
+                return;
+            }
+        }
         adultRiskMode = risk;
         document.getElementById('btn-risk1').classList.toggle('active', risk === 'normal');
         document.getElementById('btn-risk2').classList.toggle('active', risk === 'mild');
