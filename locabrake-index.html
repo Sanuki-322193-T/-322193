@@ -26,18 +26,6 @@
           });
       }
 
-      document.addEventListener("DOMContentLoaded", function() {
-          const counterEl = document.getElementById("visitor-count");
-          fetch("https://api.counterapi.dev/v1/locabrake/homepage/up")
-              .then(response => response.json())
-              .then(data => {
-                  counterEl.innerText = String(data.count).padStart(6, '0');
-              })
-              .catch(error => {
-                  console.error("Counter API Error:", error);
-                  counterEl.innerText = "------";
-              });
-      });
     </script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -121,19 +109,6 @@
             transform: translateY(-1px);
         }
 
-        .visitor-counter-box {
-            margin: 15px auto 0 auto;
-            padding: 6px 16px;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: #1e293b; 
-            color: #94a3b8; 
-            border-radius: 30px;
-            font-size: 11px;
-            font-weight: bold;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-        }
 
         .info-card {
             background: var(--card-bg);
@@ -271,14 +246,7 @@
         <a href="locabrake.html" class="cta-button" onclick="trackAppLaunch()">
             <i class="fa-solid fa-play"></i> LocaBrakeを起動する
         </a>
-        
-        <br>
-        <div class="visitor-counter-box">
-            <span><i class="fa-solid fa-users"></i> VISITOR COUNT :</span>
-            <span id="visitor-count" style="font-family: monospace; background: #0f172a; color: #2ecc71; padding: 2px 8px; border-radius: 4px; font-size: 13px; letter-spacing: 1px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);">
-                LOADING...
-            </span>
-        </div>
+
     </div>
 
     <div class="info-card">
